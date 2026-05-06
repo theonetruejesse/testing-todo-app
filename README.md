@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Test Todo App
 
-## Getting Started
+A minimal public-repo-ready Next.js todo app for testing sandbox runtime flows.
 
-First, run the development server:
+It has:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+- A browser UI at `/`
+- Todo API routes under `/api/todos`
+- In-memory server-side todo storage
+- Scripts for install, lint, build, and container-friendly dev startup
+
+## Local run
+
+```sh
+pnpm install
+pnpm check
+pnpm build
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Sandbox test commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+These are the exact commands a sandbox should be able to run after cloning the repo.
 
-## Learn More
+```sh
+pnpm install
+pnpm check
+pnpm build
+pnpm dev --hostname 0.0.0.0 --port 3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+For npm-only environments:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm install
+npm run check
+npm run build
+npm run dev -- --hostname 0.0.0.0 --port 3000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The important sandbox detail is `--hostname 0.0.0.0`; it lets remote container port forwarding reach the Next.js dev server.
 
-## Deploy on Vercel
+## API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```txt
+GET    /api/todos
+POST   /api/todos
+PATCH  /api/todos/:id
+DELETE /api/todos/:id
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Todo data is intentionally in-memory. Restarting the dev server resets it.
+
+## Publish to GitHub
+
+Create an empty GitHub repository, then run:
+
+```sh
+git remote add origin git@github.com:<your-user>/<your-repo>.git
+git branch -M main
+git push -u origin main
+```
