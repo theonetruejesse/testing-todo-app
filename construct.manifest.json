@@ -1,0 +1,128 @@
+{
+  "app": {
+    "id": "test-todo-app",
+    "name": "Test Todo App",
+    "description": "Small Next.js todo app used to dogfood Construct authority compilation."
+  },
+  "runtime": {
+    "framework": "next",
+    "packageManager": "pnpm",
+    "appPath": "."
+  },
+  "boundaries": [
+    {
+      "id": "todos.ui",
+      "description": "The user-facing todo UI surface.",
+      "read": {
+        "mode": "git-tracked",
+        "deny": [".env*", "**/.env*", ".git/**", "node_modules/**", ".next/**"]
+      },
+      "write": {
+        "allow": ["src/app/page.tsx", "src/app/components/**", "src/app/globals.css"],
+        "deny": ["src/app/api/**", "**/store/**", ".env*", "**/.env*", "package.json", "pnpm-lock.yaml"]
+      },
+      "imports": {
+        "allow": ["react", "src/app/components/**", "@construct/sdk/react"],
+        "deny": ["src/app/api/**", "**/store/**", "**/server/**", "**/secrets/**"],
+        "denyDynamicImports": true,
+        "denyHostPrivateImports": true
+      }
+    }
+  ],
+  "resources": [
+    {
+      "id": "todos.list",
+      "description": "Read visible todos from the host API.",
+      "output": {
+        "name": "TodoList"
+      },
+      "adapter": {
+        "kind": "http",
+        "method": "GET",
+        "path": "/api/todos"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "todos.create",
+      "description": "Create a todo through the host API.",
+      "input": {
+        "name": "CreateTodoInput"
+      },
+      "output": {
+        "name": "Todo"
+      },
+      "adapter": {
+        "kind": "http",
+        "method": "POST",
+        "path": "/api/todos"
+      },
+      "preview": {
+        "mode": "sandbox"
+      }
+    },
+    {
+      "id": "todos.update",
+      "description": "Update todo completion state through the host API.",
+      "input": {
+        "name": "UpdateTodoInput"
+      },
+      "output": {
+        "name": "Todo"
+      },
+      "adapter": {
+        "kind": "http",
+        "method": "PATCH",
+        "path": "/api/todos/:id"
+      },
+      "preview": {
+        "mode": "sandbox"
+      }
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "todos.main",
+      "title": "Main todo experience",
+      "description": "The primary UI where users create, complete, and delete todos.",
+      "routes": ["/"],
+      "entrypoints": ["src/app/page.tsx", "src/app/components/todo-app.tsx"],
+      "generation": {
+        "boundary": "todos.ui",
+        "resources": ["todos.list"],
+        "actions": ["todos.create", "todos.update"],
+        "integrations": []
+      },
+      "runtime": {
+        "mode": "restricted-react",
+        "resources": ["todos.list"],
+        "actions": ["todos.create", "todos.update"],
+        "integrations": []
+      },
+      "validations": ["todos.main.smoke"]
+    }
+  ],
+  "validations": [
+    {
+      "id": "todos.main.smoke",
+      "surface": "todos.main",
+      "commands": [
+        {
+          "id": "typecheck",
+          "command": "pnpm typecheck",
+          "packageScript": "typecheck"
+        },
+        {
+          "id": "build",
+          "command": "pnpm build",
+          "packageScript": "build"
+        }
+      ],
+      "browser": {
+        "path": "/",
+        "assertions": [{ "text": "Todo Runtime Check" }, { "selector": "form" }]
+      }
+    }
+  ]
+}
