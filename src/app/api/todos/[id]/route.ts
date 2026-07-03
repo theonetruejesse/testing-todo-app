@@ -1,3 +1,4 @@
+import { defineRouteOperations } from "@construct/sdk/next";
 import { NextRequest, NextResponse } from "next/server";
 import { deleteTodo, updateTodo } from "../store";
 
@@ -6,6 +7,21 @@ type RouteContext = {
     id: string;
   }>;
 };
+
+export const operations = defineRouteOperations({
+  PATCH: {
+    kind: "action",
+    id: "todos.update",
+    title: "Update todo",
+    description: "Update a todo item's title or completed state.",
+  },
+  DELETE: {
+    kind: "action",
+    id: "todos.delete",
+    title: "Delete todo",
+    description: "Delete a todo item.",
+  },
+});
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   const { id } = await context.params;

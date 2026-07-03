@@ -1,5 +1,21 @@
+import { defineRouteOperations } from "@construct/sdk/next";
 import { NextRequest, NextResponse } from "next/server";
 import { createTodo, listTodos } from "./store";
+
+export const operations = defineRouteOperations({
+  GET: {
+    kind: "resource",
+    id: "todos.list",
+    title: "List todos",
+    description: "Read the visible todo list.",
+  },
+  POST: {
+    kind: "action",
+    id: "todos.create",
+    title: "Create todo",
+    description: "Create a todo item.",
+  },
+});
 
 export async function GET() {
   return NextResponse.json({ todos: listTodos() });

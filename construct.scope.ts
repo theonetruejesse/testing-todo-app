@@ -1,19 +1,4 @@
-import { defineConstructOperations, defineConstructScope } from "@construct/sdk";
-
-export const operations = defineConstructOperations([
-  {
-    kind: "resource",
-    id: "todos.list",
-    title: "List todos",
-    description: "Read the visible todo list.",
-  },
-  {
-    kind: "action",
-    id: "todos.mutate",
-    title: "Mutate todos",
-    description: "Create, complete, or delete todo items.",
-  },
-]);
+import { defineConstructScope } from "@construct/sdk";
 
 export default defineConstructScope({
   read: {
