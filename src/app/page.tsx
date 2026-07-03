@@ -5,12 +5,7 @@ import { TodoApp } from "./components/todo-app";
 export default function Home() {
   return (
     <main className="shell">
-      <Surface
-        id="todos.main"
-        title="Todo List"
-        permission="read-write"
-        files={["src/app/page.tsx", "src/app/components/**", "src/app/globals.css"]}
-      >
+      <Surface id="todos.main" title="Todo List" permission="read-write">
         <TodoApp initialTodos={listTodos()} />
       </Surface>
     </main>

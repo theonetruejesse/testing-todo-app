@@ -17,7 +17,7 @@ export const operations = defineConstructOperations([
 
 export default defineConstructScope({
   read: {
-    allow: ["src/**", "package.json", "next.config.ts", "tsconfig.json"],
+    allow: ["src/**", "src/app/globals.css", "package.json", "next.config.ts", "tsconfig.json"],
     deny: [".env*", "**/.env*", ".git/**", "node_modules/**", ".next/**"],
   },
   scripts: {
