@@ -10,4 +10,7 @@ export default defineConstructScope({
     review: ["lint", "check"],
     deny: ["dev", "start"],
   },
+  dependencies: {
+    allow: true,
+  },
 });
