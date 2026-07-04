@@ -1,0 +1,1 @@
+{"version":3,"file":"runtime.d.ts","sourceRoot":"","sources":["../../../../src/manifest/primitives/project/runtime.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,cAAc,EAAE,gBAAgB,EAAE,gBAAgB,EAAE,MAAM,cAAc,CAAC;AAIvF,MAAM,MAAM,wBAAwB,GAAG;IACrC,SAAS,EAAE,gBAAgB,CAAC;IAC5B,cAAc,CAAC,EAAE,cAAc,CAAC;IAChC,OAAO,CAAC,EAAE,gBAAgB,CAAC;CAC5B,CAAC"}

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@construct/sdk':
-        specifier: file:../construct/packages/sdk
-        version: file:../construct/packages/sdk
+        specifier: file:./vendor/construct/packages/sdk
+        version: file:vendor/construct/packages/sdk
       next:
         specifier: 16.2.4
         version: 16.2.4(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -109,11 +109,11 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
-  '@construct/authority-manifest@file:../construct/packages/authority-manifest':
-    resolution: {directory: ../construct/packages/authority-manifest, type: directory}
+  '@construct/authority-manifest@file:vendor/construct/packages/authority-manifest':
+    resolution: {directory: vendor/construct/packages/authority-manifest, type: directory}
 
-  '@construct/sdk@file:../construct/packages/sdk':
-    resolution: {directory: ../construct/packages/sdk, type: directory}
+  '@construct/sdk@file:vendor/construct/packages/sdk':
+    resolution: {directory: vendor/construct/packages/sdk, type: directory}
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -1836,11 +1836,11 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@construct/authority-manifest@file:../construct/packages/authority-manifest': {}
+  '@construct/authority-manifest@file:vendor/construct/packages/authority-manifest': {}
 
-  '@construct/sdk@file:../construct/packages/sdk':
+  '@construct/sdk@file:vendor/construct/packages/sdk':
     dependencies:
-      '@construct/authority-manifest': file:../construct/packages/authority-manifest
+      '@construct/authority-manifest': file:vendor/construct/packages/authority-manifest
 
   '@emnapi/core@1.10.0':
     dependencies:

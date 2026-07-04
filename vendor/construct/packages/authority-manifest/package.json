@@ -1,0 +1,37 @@
+{
+  "name": "@construct/authority-manifest",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./manifest": {
+      "types": "./src/manifest/index.ts",
+      "development": "./src/manifest/index.ts",
+      "default": "./dist/manifest/index.js"
+    },
+    "./manifest/primitives/shared": {
+      "types": "./src/manifest/primitives/shared.ts",
+      "development": "./src/manifest/primitives/shared.ts",
+      "default": "./dist/manifest/primitives/shared.js"
+    },
+    "./manifest/primitives/product/*": {
+      "types": "./src/manifest/primitives/product/*.ts",
+      "development": "./src/manifest/primitives/product/*.ts",
+      "default": "./dist/manifest/primitives/product/*.js"
+    },
+    "./manifest/primitives/project/*": {
+      "types": "./src/manifest/primitives/project/*.ts",
+      "development": "./src/manifest/primitives/project/*.ts",
+      "default": "./dist/manifest/primitives/project/*.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  }
+}
