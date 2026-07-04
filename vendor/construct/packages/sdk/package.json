@@ -5,18 +5,18 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "development": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./react": {
-      "types": "./src/react/index.ts",
-      "development": "./src/react/index.ts",
+      "types": "./dist/react/index.d.ts",
+      "development": "./dist/react/index.js",
       "default": "./dist/react/index.js"
     },
     "./next": {
-      "types": "./src/next/index.ts",
-      "development": "./src/next/index.ts",
+      "types": "./dist/next/index.d.ts",
+      "development": "./dist/next/index.js",
       "default": "./dist/next/index.js"
     }
   },
