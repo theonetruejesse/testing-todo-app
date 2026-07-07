@@ -25,6 +25,7 @@ import {
   createElement,
   type ErrorInfo,
   type ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useId,
@@ -60,6 +61,7 @@ export type ConstructRuntimeArtifactDescriptor = {
 };
 
 export type ConstructProviderProps = {
+  actionInvalidations?: Record<string, string[]>;
   artifactScope?: ConstructRuntimeArtifactScope;
   actionHandlers?: Record<string, (input: ConstructJsonValue) => Promise<unknown>>;
   children?: ReactNode;
@@ -74,12 +76,15 @@ export type ConstructProviderProps = {
 };
 
 type ConstructProviderValue = {
+  actionInvalidations: Record<string, string[]>;
   actionHandlers: Record<string, (input: ConstructJsonValue) => Promise<unknown>>;
   artifactScope: ConstructRuntimeArtifactScope;
   constructRuntime: Record<string, unknown>;
   currentSurface?: ConstructSurfaceInfo;
   enabled: boolean;
+  invalidateResources: (resourceIds: string[]) => void;
   onSurfaceError?: (error: unknown, surfaceId: ConstructId) => void;
+  resourceInvalidationVersion: Record<string, number>;
   resourceHandlers: Record<string, (input: ConstructJsonValue | undefined) => Promise<unknown>>;
   resolveRuntimeArtifact?: ConstructProviderProps["resolveRuntimeArtifact"];
   settings: Record<string, ConstructJsonValue>;
@@ -104,8 +109,29 @@ const artifactModuleCache = new Map<string, Promise<ComponentType>>();
 
 export function ConstructProvider(props: ConstructProviderProps): ReactNode {
   const parent = useContext(ConstructContext);
+  const [localResourceInvalidationVersion, setLocalResourceInvalidationVersion] = useState<
+    Record<string, number>
+  >({});
+  const invalidateResources = useCallback(
+    (resourceIds: string[]) => {
+      if (resourceIds.length === 0) return;
+      setLocalResourceInvalidationVersion((current) => {
+        const next = { ...current };
+        for (const resourceId of resourceIds) {
+          next[resourceId] = (next[resourceId] ?? 0) + 1;
+        }
+        return next;
+      });
+      parent?.invalidateResources(resourceIds);
+    },
+    [parent],
+  );
   const value = useMemo<ConstructProviderValue>(
     () => ({
+      actionInvalidations: {
+        ...(parent?.actionInvalidations ?? {}),
+        ...(props.actionInvalidations ?? {}),
+      },
       actionHandlers: {
         ...(parent?.actionHandlers ?? {}),
         ...(props.actionHandlers ?? {}),
@@ -117,7 +143,12 @@ export function ConstructProvider(props: ConstructProviderProps): ReactNode {
       constructRuntime: props.constructRuntime ?? parent?.constructRuntime ?? constructHostRuntime,
       currentSurface: parent?.currentSurface,
       enabled: props.enabled ?? parent?.enabled ?? true,
+      invalidateResources,
       onSurfaceError: props.onSurfaceError ?? parent?.onSurfaceError,
+      resourceInvalidationVersion: {
+        ...(parent?.resourceInvalidationVersion ?? {}),
+        ...localResourceInvalidationVersion,
+      },
       resourceHandlers: {
         ...(parent?.resourceHandlers ?? {}),
         ...(props.resourceHandlers ?? {}),
@@ -130,10 +161,13 @@ export function ConstructProvider(props: ConstructProviderProps): ReactNode {
     }),
     [
       parent,
+      props.actionInvalidations,
       props.actionHandlers,
       props.artifactScope,
       props.constructRuntime,
       props.enabled,
+      invalidateResources,
+      localResourceInvalidationVersion,
       props.onSurfaceError,
       props.resourceHandlers,
       props.resolveRuntimeArtifact,
@@ -319,6 +353,7 @@ function useConstructResource<TData = unknown, TInput = ConstructJsonValue>(
 ): ConstructResourceHandle<TData> {
   const construct = useContext(ConstructContext);
   const handler = construct?.resourceHandlers[resourceId];
+  const invalidationVersion = construct?.resourceInvalidationVersion[resourceId] ?? 0;
   const [refreshNonce, refresh] = useReducer((value: number) => value + 1, 0);
   const [state, setState] = useState<{
     status: ConstructResourceStatus;
@@ -327,6 +362,7 @@ function useConstructResource<TData = unknown, TInput = ConstructJsonValue>(
   }>({ status: handler ? "loading" : "error", data: undefined, error: undefined });
 
   useEffect(() => {
+    void invalidationVersion;
     void refreshNonce;
 
     if (!handler) {
@@ -359,7 +395,14 @@ function useConstructResource<TData = unknown, TInput = ConstructJsonValue>(
       cancelled = true;
       window.clearTimeout(timeout);
     };
-  }, [handler, options?.input, options?.inputDebounceMs, refreshNonce, resourceId]);
+  }, [
+    handler,
+    invalidationVersion,
+    options?.input,
+    options?.inputDebounceMs,
+    refreshNonce,
+    resourceId,
+  ]);
 
   return {
     ...state,
@@ -374,6 +417,8 @@ function useConstructAction<TInput = ConstructJsonValue, TOutput = unknown>(
 ): ConstructActionHandle<TInput, TOutput> {
   const construct = useContext(ConstructContext);
   const handler = construct?.actionHandlers[actionId];
+  const invalidatedResourceIds = construct?.actionInvalidations[actionId] ?? [];
+  const invalidateResources = construct?.invalidateResources;
   const [status, setStatus] = useState<ConstructActionStatus>("idle");
   const [error, setError] = useState<ConstructDisplayError | undefined>(undefined);
 
@@ -401,6 +446,7 @@ function useConstructAction<TInput = ConstructJsonValue, TOutput = unknown>(
         try {
           const output = await handler(input as ConstructJsonValue);
           setStatus("success");
+          invalidateResources?.(invalidatedResourceIds);
           return output as TOutput;
         } catch (runError) {
           const nextError = toConstructDisplayError(runError);
@@ -410,7 +456,7 @@ function useConstructAction<TInput = ConstructJsonValue, TOutput = unknown>(
         }
       },
     }),
-    [actionId, error, handler, status],
+    [actionId, error, handler, invalidatedResourceIds, invalidateResources, status],
   );
 }
 

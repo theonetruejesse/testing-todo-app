@@ -1,13 +1,30 @@
 "use client";
 import { loadConstructArtifactModule } from "@construct/runtime/loader";
 import * as ReactRuntime from "react";
-import { createContext, createElement, useContext, useEffect, useId, useMemo, useReducer, useState, } from "react";
+import { createContext, createElement, useCallback, useContext, useEffect, useId, useMemo, useReducer, useState, } from "react";
 import * as JsxRuntime from "react/jsx-runtime";
 const ConstructContext = createContext(null);
 const artifactModuleCache = new Map();
 export function ConstructProvider(props) {
     const parent = useContext(ConstructContext);
+    const [localResourceInvalidationVersion, setLocalResourceInvalidationVersion] = useState({});
+    const invalidateResources = useCallback((resourceIds) => {
+        if (resourceIds.length === 0)
+            return;
+        setLocalResourceInvalidationVersion((current) => {
+            const next = { ...current };
+            for (const resourceId of resourceIds) {
+                next[resourceId] = (next[resourceId] ?? 0) + 1;
+            }
+            return next;
+        });
+        parent?.invalidateResources(resourceIds);
+    }, [parent]);
     const value = useMemo(() => ({
+        actionInvalidations: {
+            ...(parent?.actionInvalidations ?? {}),
+            ...(props.actionInvalidations ?? {}),
+        },
         actionHandlers: {
             ...(parent?.actionHandlers ?? {}),
             ...(props.actionHandlers ?? {}),
@@ -19,7 +36,12 @@ export function ConstructProvider(props) {
         constructRuntime: props.constructRuntime ?? parent?.constructRuntime ?? constructHostRuntime,
         currentSurface: parent?.currentSurface,
         enabled: props.enabled ?? parent?.enabled ?? true,
+        invalidateResources,
         onSurfaceError: props.onSurfaceError ?? parent?.onSurfaceError,
+        resourceInvalidationVersion: {
+            ...(parent?.resourceInvalidationVersion ?? {}),
+            ...localResourceInvalidationVersion,
+        },
         resourceHandlers: {
             ...(parent?.resourceHandlers ?? {}),
             ...(props.resourceHandlers ?? {}),
@@ -31,10 +53,13 @@ export function ConstructProvider(props) {
         },
     }), [
         parent,
+        props.actionInvalidations,
         props.actionHandlers,
         props.artifactScope,
         props.constructRuntime,
         props.enabled,
+        invalidateResources,
+        localResourceInvalidationVersion,
         props.onSurfaceError,
         props.resourceHandlers,
         props.resolveRuntimeArtifact,
@@ -181,9 +206,11 @@ const constructHostRuntime = {
 function useConstructResource(resourceId, options) {
     const construct = useContext(ConstructContext);
     const handler = construct?.resourceHandlers[resourceId];
+    const invalidationVersion = construct?.resourceInvalidationVersion[resourceId] ?? 0;
     const [refreshNonce, refresh] = useReducer((value) => value + 1, 0);
     const [state, setState] = useState({ status: handler ? "loading" : "error", data: undefined, error: undefined });
     useEffect(() => {
+        void invalidationVersion;
         void refreshNonce;
         if (!handler) {
             setState({
@@ -214,7 +241,14 @@ function useConstructResource(resourceId, options) {
             cancelled = true;
             window.clearTimeout(timeout);
         };
-    }, [handler, options?.input, options?.inputDebounceMs, refreshNonce, resourceId]);
+    }, [
+        handler,
+        invalidationVersion,
+        options?.input,
+        options?.inputDebounceMs,
+        refreshNonce,
+        resourceId,
+    ]);
     return {
         ...state,
         refresh: async () => {
@@ -225,6 +259,8 @@ function useConstructResource(resourceId, options) {
 function useConstructAction(actionId) {
     const construct = useContext(ConstructContext);
     const handler = construct?.actionHandlers[actionId];
+    const invalidatedResourceIds = construct?.actionInvalidations[actionId] ?? [];
+    const invalidateResources = construct?.invalidateResources;
     const [status, setStatus] = useState("idle");
     const [error, setError] = useState(undefined);
     return useMemo(() => ({
@@ -249,6 +285,7 @@ function useConstructAction(actionId) {
             try {
                 const output = await handler(input);
                 setStatus("success");
+                invalidateResources?.(invalidatedResourceIds);
                 return output;
             }
             catch (runError) {
@@ -258,7 +295,7 @@ function useConstructAction(actionId) {
                 throw nextError;
             }
         },
-    }), [actionId, error, handler, status]);
+    }), [actionId, error, handler, invalidatedResourceIds, invalidateResources, status]);
 }
 function useConstructActionForm(actionId) {
     const action = useConstructAction(actionId);

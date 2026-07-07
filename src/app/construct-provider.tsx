@@ -3,7 +3,8 @@
 import { ConstructProvider } from "@construct/sdk/react";
 import type { ReactNode } from "react";
 
-const platformApiUrl = process.env.NEXT_PUBLIC_CONSTRUCT_PLATFORM_API_URL ?? "http://localhost:4100";
+const platformApiUrl =
+  process.env.NEXT_PUBLIC_CONSTRUCT_PLATFORM_API_URL ?? "http://localhost:4100";
 
 type ConstructJsonValue =
   | string
@@ -18,6 +19,11 @@ type JsonRecord = Record<string, ConstructJsonValue>;
 export function LocalConstructProvider({ children }: { children: ReactNode }) {
   return (
     <ConstructProvider
+      actionInvalidations={{
+        "todos.create": ["todos.list"],
+        "todos.update": ["todos.list"],
+        "todos.delete": ["todos.list"],
+      }}
       resolveRuntimeArtifact={async (input) => {
         const response = await fetch(`${platformApiUrl}/runtime-artifacts/resolve`, {
           method: "POST",

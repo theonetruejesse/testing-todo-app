@@ -24,6 +24,7 @@ export type ConstructRuntimeArtifactDescriptor = {
     metadata: Record<string, unknown>;
 };
 export type ConstructProviderProps = {
+    actionInvalidations?: Record<string, string[]>;
     artifactScope?: ConstructRuntimeArtifactScope;
     actionHandlers?: Record<string, (input: ConstructJsonValue) => Promise<unknown>>;
     children?: ReactNode;
