@@ -24,7 +24,12 @@ export async function loadConstructArtifactModule(
   globalRuntime[CONSTRUCT_ARTIFACT_RUNTIME_SYMBOL] = runtime;
 
   try {
-    return (await import(/* @vite-ignore */ moduleUrl)) as ConstructArtifactModule;
+    return (await import(
+      /* webpackIgnore: true */
+      /* turbopackIgnore: true */
+      /* @vite-ignore */
+      moduleUrl
+    )) as ConstructArtifactModule;
   } finally {
     if (previousRuntime) {
       globalRuntime[CONSTRUCT_ARTIFACT_RUNTIME_SYMBOL] = previousRuntime;

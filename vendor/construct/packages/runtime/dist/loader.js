@@ -4,7 +4,11 @@ export async function loadConstructArtifactModule(moduleUrl, runtime) {
     const previousRuntime = globalRuntime[CONSTRUCT_ARTIFACT_RUNTIME_SYMBOL];
     globalRuntime[CONSTRUCT_ARTIFACT_RUNTIME_SYMBOL] = runtime;
     try {
-        return (await import(/* @vite-ignore */ moduleUrl));
+        return (await import(
+        /* webpackIgnore: true */
+        /* turbopackIgnore: true */
+        /* @vite-ignore */
+        moduleUrl));
     }
     finally {
         if (previousRuntime) {
