@@ -20,6 +20,19 @@ pnpm dev
 
 Open `http://localhost:3000`.
 
+## Local Construct runtime surfaces
+
+The app wraps its root layout with `LocalConstructProvider`. When local
+Construct services are running, `<Surface id="todos.main">` asks Platform API
+for an approved runtime artifact at:
+
+```txt
+http://localhost:4100/runtime-artifacts/resolve
+```
+
+Set `NEXT_PUBLIC_CONSTRUCT_PLATFORM_API_URL` only if Platform API is not on
+`http://localhost:4100`.
+
 ## Sandbox test commands
 
 These are the exact commands a sandbox should be able to run after cloning the repo.

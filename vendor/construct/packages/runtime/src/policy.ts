@@ -1,0 +1,22 @@
+export const CONSTRUCT_RUNTIME_APPROVED_IMPORTS = [
+  "ConstructActionButton",
+  "ConstructField",
+  "ConstructForm",
+  "ConstructIcon",
+  "ConstructLink",
+  "ConstructResourceBoundary",
+  "constructClassNames",
+  "constructRange",
+  "createConstructLocalContext",
+  "useConstructAction",
+  "useConstructActionForm",
+  "useConstructFormat",
+  "useConstructLocale",
+  "useConstructLocalContext",
+  "useConstructResource",
+  "useConstructSetting",
+  "useConstructSurface",
+  "useConstructViewport",
+] as const;
+
+export type ConstructRuntimeApprovedImport = (typeof CONSTRUCT_RUNTIME_APPROVED_IMPORTS)[number];

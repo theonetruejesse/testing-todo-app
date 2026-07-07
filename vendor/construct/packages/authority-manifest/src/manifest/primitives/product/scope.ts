@@ -13,9 +13,14 @@ export type PackageScriptScope = {
   deny?: PackageScriptName[];
 };
 
+export type DependencyScope = {
+  allow?: boolean;
+};
+
 export type ProjectScopeDeclaration = {
   read: ProjectReadScope;
   scripts?: PackageScriptScope;
+  dependencies?: DependencyScope;
 };
 
 export function defaultProjectScope(): ProjectScopeDeclaration {

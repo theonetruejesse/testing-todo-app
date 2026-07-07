@@ -44,6 +44,35 @@ test("surface files inside scope become read-write", () => {
     ]);
     assert.deepEqual(resolved.resolved.findings, []);
 });
+test("dependency policy defaults to off", () => {
+    const resolved = resolveConstructManifest({
+        manifest: defineConstructManifest({
+            identity: { id: "demo", name: "Demo" },
+            scope: {
+                read: {
+                    allow: ["src/**"],
+                },
+            },
+        }),
+    });
+    assert.deepEqual(resolved.resolved.dependencies, { allow: false });
+});
+test("dependency policy resolves explicit allow flag", () => {
+    const resolved = resolveConstructManifest({
+        manifest: defineConstructManifest({
+            identity: { id: "demo", name: "Demo" },
+            scope: {
+                read: {
+                    allow: ["src/**"],
+                },
+                dependencies: {
+                    allow: true,
+                },
+            },
+        }),
+    });
+    assert.deepEqual(resolved.resolved.dependencies, { allow: true });
+});
 test("surface files outside scope produce findings instead of write authority", () => {
     const resolved = resolveConstructManifest({
         manifest: defineConstructManifest({

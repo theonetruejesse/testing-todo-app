@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@construct/sdk':
         specifier: file:./vendor/construct/packages/sdk
-        version: file:vendor/construct/packages/sdk
+        version: file:vendor/construct/packages/sdk(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.2.4
         version: 16.2.4(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -112,8 +112,16 @@ packages:
   '@construct/authority-manifest@file:vendor/construct/packages/authority-manifest':
     resolution: {directory: vendor/construct/packages/authority-manifest, type: directory}
 
+  '@construct/runtime@file:vendor/construct/packages/runtime':
+    resolution: {directory: vendor/construct/packages/runtime, type: directory}
+    peerDependencies:
+      react: '>=19'
+
   '@construct/sdk@file:vendor/construct/packages/sdk':
     resolution: {directory: vendor/construct/packages/sdk, type: directory}
+    peerDependencies:
+      react: '>=19'
+      react-dom: '>=19'
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -1838,9 +1846,16 @@ snapshots:
 
   '@construct/authority-manifest@file:vendor/construct/packages/authority-manifest': {}
 
-  '@construct/sdk@file:vendor/construct/packages/sdk':
+  '@construct/runtime@file:vendor/construct/packages/runtime(react@19.2.4)':
+    dependencies:
+      react: 19.2.4
+
+  '@construct/sdk@file:vendor/construct/packages/sdk(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@construct/authority-manifest': file:vendor/construct/packages/authority-manifest
+      '@construct/runtime': file:vendor/construct/packages/runtime(react@19.2.4)
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
 
   '@emnapi/core@1.10.0':
     dependencies:

@@ -1,0 +1,3 @@
+export declare const CONSTRUCT_RUNTIME_APPROVED_IMPORTS: readonly ["ConstructActionButton", "ConstructField", "ConstructForm", "ConstructIcon", "ConstructLink", "ConstructResourceBoundary", "constructClassNames", "constructRange", "createConstructLocalContext", "useConstructAction", "useConstructActionForm", "useConstructFormat", "useConstructLocale", "useConstructLocalContext", "useConstructResource", "useConstructSetting", "useConstructSurface", "useConstructViewport"];
+export type ConstructRuntimeApprovedImport = (typeof CONSTRUCT_RUNTIME_APPROVED_IMPORTS)[number];
+//# sourceMappingURL=policy.d.ts.map

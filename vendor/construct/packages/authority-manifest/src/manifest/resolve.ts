@@ -17,6 +17,10 @@ export type ResolvedScriptPermissions = {
   deny: PackageScriptName[];
 };
 
+export type ResolvedDependencyPolicy = {
+  allow: boolean;
+};
+
 export type AuthorityResolutionFinding = {
   code:
     | "surface.file-outside-scope"
@@ -31,6 +35,7 @@ export type AuthorityResolutionFinding = {
 export type ResolvedAuthority = {
   files: ResolvedFilePermission[];
   scripts: ResolvedScriptPermissions;
+  dependencies: ResolvedDependencyPolicy;
   findings: AuthorityResolutionFinding[];
 };
 
@@ -84,6 +89,9 @@ export function resolveConstructManifest(
         allow: input.manifest.scope.scripts?.allow ?? [],
         review: input.manifest.scope.scripts?.review ?? [],
         deny: input.manifest.scope.scripts?.deny ?? [],
+      },
+      dependencies: {
+        allow: input.manifest.scope.dependencies?.allow === true,
       },
       findings: surfaceResolution.findings,
     },

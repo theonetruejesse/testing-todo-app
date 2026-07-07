@@ -36,6 +36,9 @@ export function resolveConstructManifest(input) {
                 review: input.manifest.scope.scripts?.review ?? [],
                 deny: input.manifest.scope.scripts?.deny ?? [],
             },
+            dependencies: {
+                allow: input.manifest.scope.dependencies?.allow === true,
+            },
             findings: surfaceResolution.findings,
         },
     };

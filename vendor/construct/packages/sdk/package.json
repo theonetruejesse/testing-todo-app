@@ -25,6 +25,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@construct/authority-manifest": "file:../authority-manifest"
+    "@construct/authority-manifest": "file:../authority-manifest",
+    "@construct/runtime": "file:../runtime"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
   }
 }

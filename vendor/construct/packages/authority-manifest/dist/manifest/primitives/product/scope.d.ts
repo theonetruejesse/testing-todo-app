@@ -8,9 +8,13 @@ export type PackageScriptScope = {
     review?: PackageScriptName[];
     deny?: PackageScriptName[];
 };
+export type DependencyScope = {
+    allow?: boolean;
+};
 export type ProjectScopeDeclaration = {
     read: ProjectReadScope;
     scripts?: PackageScriptScope;
+    dependencies?: DependencyScope;
 };
 export declare function defaultProjectScope(): ProjectScopeDeclaration;
 //# sourceMappingURL=scope.d.ts.map

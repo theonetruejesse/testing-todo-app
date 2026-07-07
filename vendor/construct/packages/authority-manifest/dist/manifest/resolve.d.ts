@@ -13,6 +13,9 @@ export type ResolvedScriptPermissions = {
     review: PackageScriptName[];
     deny: PackageScriptName[];
 };
+export type ResolvedDependencyPolicy = {
+    allow: boolean;
+};
 export type AuthorityResolutionFinding = {
     code: "surface.file-outside-scope" | "surface.file-denied-by-scope" | "surface.file-shared-by-surfaces";
     severity: "warning";
@@ -23,6 +26,7 @@ export type AuthorityResolutionFinding = {
 export type ResolvedAuthority = {
     files: ResolvedFilePermission[];
     scripts: ResolvedScriptPermissions;
+    dependencies: ResolvedDependencyPolicy;
     findings: AuthorityResolutionFinding[];
 };
 export type ResolveConstructManifestInput = {
