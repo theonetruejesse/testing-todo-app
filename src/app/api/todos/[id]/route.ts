@@ -1,6 +1,13 @@
 import { defineRouteOperations } from "@construct/sdk/next";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { deleteTodo, updateTodo } from "../store";
+
+const todoSchema = z.object({
+  id: z.string().uuid().describe("Stable todo identifier"),
+  title: z.string().min(1).max(120).describe("Short description of the work item"),
+  completed: z.boolean().describe("Whether the work item is complete"),
+});
 
 type RouteContext = {
   params: Promise<{
@@ -14,12 +21,22 @@ export const operations = defineRouteOperations({
     id: "todos.update",
     title: "Update todo",
     description: "Update a todo item's title or completed state.",
+    input: z.object({
+      id: z.string().uuid(),
+      title: z.string().min(1).max(120).optional(),
+      completed: z.boolean().optional(),
+    }),
+    output: todoSchema,
+    invalidates: ["todos.list"],
   },
   DELETE: {
     kind: "action",
     id: "todos.delete",
     title: "Delete todo",
     description: "Delete a todo item.",
+    input: z.object({ id: z.string().uuid() }),
+    output: z.null(),
+    invalidates: ["todos.list"],
   },
 });
 

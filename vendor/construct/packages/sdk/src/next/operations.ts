@@ -1,6 +1,14 @@
-import type { OperationDeclaration } from "@construct/authority-manifest/manifest";
+import type {
+  OperationDeclaration,
+  OperationSchema,
+} from "@construct/authority-manifest/manifest";
 
-export type RouteOperationMap = Record<string, OperationDeclaration>;
+type HostSchema = OperationSchema | object;
+export type RouteOperationDeclaration = Omit<OperationDeclaration, "inputSchema" | "outputSchema"> & {
+  input?: HostSchema;
+  output?: HostSchema;
+};
+export type RouteOperationMap = Record<string, RouteOperationDeclaration>;
 
 // Host-authored Next route annotation. The route handlers stay normal Next
 // exports; Gatekeeper scans this object to discover exposed product operations.

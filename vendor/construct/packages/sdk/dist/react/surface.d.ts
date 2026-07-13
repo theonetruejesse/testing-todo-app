@@ -39,6 +39,8 @@ export type SurfaceProps = {
     id: ConstructId;
     title: string;
     description?: string;
+    audience?: string;
+    useCases?: string[];
     children?: ReactNode;
 };
 export type SurfaceDescriptor = {
@@ -46,6 +48,8 @@ export type SurfaceDescriptor = {
     id: ConstructId;
     title: string;
     description?: string;
+    audience?: string;
+    useCases?: string[];
 };
 export declare function ConstructProvider(props: ConstructProviderProps): ReactNode;
 export declare function Surface(props: SurfaceProps): ReactNode;

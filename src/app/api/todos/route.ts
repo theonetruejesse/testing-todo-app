@@ -1,19 +1,43 @@
 import { defineRouteOperations } from "@construct/sdk/next";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { createTodo, listTodos } from "./store";
+
+const todoSchema = z.object({
+  id: z.string().uuid().describe("Stable todo identifier"),
+  title: z.string().min(1).max(120).describe("Short description of the work item"),
+  completed: z.boolean().describe("Whether the work item is complete"),
+});
 
 export const operations = defineRouteOperations({
   GET: {
     kind: "resource",
     id: "todos.list",
     title: "List todos",
-    description: "Read the visible todo list.",
+    description: "Returns todo items visible to the current user.",
+    semantics: {
+      audience: "Individual contributors",
+      useCases: ["Plan current work", "Review completed work"],
+      dataSensitivity: "internal",
+    },
+    input: z.object({}),
+    output: z.array(todoSchema),
   },
   POST: {
     kind: "action",
     id: "todos.create",
     title: "Create todo",
-    description: "Create a todo item.",
+    description: "Creates a new incomplete todo item.",
+    semantics: {
+      audience: "Individual contributors",
+      useCases: ["Capture a new work item"],
+      dataSensitivity: "internal",
+    },
+    input: z.object({
+      title: z.string().min(1).max(120).describe("Title of the new work item"),
+    }),
+    output: todoSchema,
+    invalidates: ["todos.list"],
   },
 });
 

@@ -1,4 +1,9 @@
-import type { OperationDeclaration } from "@construct/authority-manifest/manifest";
-export type RouteOperationMap = Record<string, OperationDeclaration>;
+import type { OperationDeclaration, OperationSchema } from "@construct/authority-manifest/manifest";
+type HostSchema = OperationSchema | object;
+export type RouteOperationDeclaration = Omit<OperationDeclaration, "inputSchema" | "outputSchema"> & {
+    input?: HostSchema;
+    output?: HostSchema;
+};
+export type RouteOperationMap = Record<string, RouteOperationDeclaration>;
 export declare function defineRouteOperations<const T extends RouteOperationMap>(operations: T): T;
 //# sourceMappingURL=operations.d.ts.map

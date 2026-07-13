@@ -3,6 +3,8 @@ export type SurfaceDeclaration = {
     id: ConstructId;
     title: string;
     description?: string;
+    audience?: string;
+    useCases?: string[];
 };
 export type SurfaceMetadata = {
     additiveRoot: FilePattern;
