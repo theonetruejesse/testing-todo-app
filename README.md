@@ -23,15 +23,16 @@ Open `http://localhost:3000`.
 ## Local Construct runtime surfaces
 
 The app wraps its root layout with `LocalConstructProvider`. When local
-Construct services are running, `<Surface id="todos.main">` asks Platform API
-for an approved runtime artifact at:
+Construct services are running, `<Surface id="todos.main">` asks the app's
+same-origin server route for the artifact assigned to this deployment target:
 
 ```txt
-http://localhost:4100/runtime-artifacts/resolve
+http://localhost:3000/api/construct/runtime-artifacts/resolve
 ```
 
-Set `NEXT_PUBLIC_CONSTRUCT_PLATFORM_API_URL` only if Platform API is not on
-`http://localhost:4100`.
+Copy `.env.example` to `.env.local` for local integration. The target secret and
+Platform API URL are server-only; generated artifact objects are revalidated and
+proxied through this app rather than exposing deployment credentials to the browser.
 
 ## Sandbox test commands
 
