@@ -68,6 +68,7 @@ export type ConstructProviderProps = {
   constructRuntime?: Record<string, unknown>;
   enabled?: boolean;
   onSurfaceError?: (error: unknown, surfaceId: ConstructId) => void;
+  onSurfaceReady?: (descriptor: ConstructRuntimeArtifactDescriptor, surfaceId: ConstructId) => void;
   resourceHandlers?: Record<string, (input: ConstructJsonValue | undefined) => Promise<unknown>>;
   resolveRuntimeArtifact?: (
     input: ConstructRuntimeArtifactResolutionInput,
@@ -84,6 +85,7 @@ type ConstructProviderValue = {
   enabled: boolean;
   invalidateResources: (resourceIds: string[]) => void;
   onSurfaceError?: (error: unknown, surfaceId: ConstructId) => void;
+  onSurfaceReady?: ConstructProviderProps["onSurfaceReady"];
   resourceInvalidationVersion: Record<string, number>;
   resourceHandlers: Record<string, (input: ConstructJsonValue | undefined) => Promise<unknown>>;
   resolveRuntimeArtifact?: ConstructProviderProps["resolveRuntimeArtifact"];
@@ -145,6 +147,7 @@ export function ConstructProvider(props: ConstructProviderProps): ReactNode {
       enabled: props.enabled ?? parent?.enabled ?? true,
       invalidateResources,
       onSurfaceError: props.onSurfaceError ?? parent?.onSurfaceError,
+      onSurfaceReady: props.onSurfaceReady ?? parent?.onSurfaceReady,
       resourceInvalidationVersion: {
         ...(parent?.resourceInvalidationVersion ?? {}),
         ...localResourceInvalidationVersion,
@@ -169,6 +172,7 @@ export function ConstructProvider(props: ConstructProviderProps): ReactNode {
       invalidateResources,
       localResourceInvalidationVersion,
       props.onSurfaceError,
+      props.onSurfaceReady,
       props.resourceHandlers,
       props.resolveRuntimeArtifact,
       props.settings,
@@ -250,13 +254,34 @@ export function Surface(props: SurfaceProps): ReactNode {
             },
           },
         },
-        createElement(loaded.Component),
+        createElement(ReadySurface, {
+          Component: loaded.Component,
+          descriptor: loaded.descriptor,
+          onReady: construct.onSurfaceReady,
+          surfaceId: props.id,
+        }),
       ),
     );
   }
 
   if (loadError) return props.children ?? null;
   return props.children ?? null;
+}
+
+function ReadySurface(input: {
+  Component: ComponentType;
+  descriptor: ConstructRuntimeArtifactDescriptor;
+  onReady?: ConstructProviderProps["onSurfaceReady"];
+  surfaceId: ConstructId;
+}): ReactNode {
+  useEffect(() => {
+    // This effect belongs to the generated subtree. It cannot run when module
+    // loading fails or the component throws during render, so hosts do not
+    // mistake a fallback for a successfully committed artifact.
+    input.onReady?.(input.descriptor, input.surfaceId);
+  }, [input.descriptor, input.onReady, input.surfaceId]);
+
+  return createElement(input.Component);
 }
 
 export function createSurfaceDescriptor(props: SurfaceProps): SurfaceDescriptor {

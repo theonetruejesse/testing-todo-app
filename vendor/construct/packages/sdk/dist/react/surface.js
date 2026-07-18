@@ -38,6 +38,7 @@ export function ConstructProvider(props) {
         enabled: props.enabled ?? parent?.enabled ?? true,
         invalidateResources,
         onSurfaceError: props.onSurfaceError ?? parent?.onSurfaceError,
+        onSurfaceReady: props.onSurfaceReady ?? parent?.onSurfaceReady,
         resourceInvalidationVersion: {
             ...(parent?.resourceInvalidationVersion ?? {}),
             ...localResourceInvalidationVersion,
@@ -61,6 +62,7 @@ export function ConstructProvider(props) {
         invalidateResources,
         localResourceInvalidationVersion,
         props.onSurfaceError,
+        props.onSurfaceReady,
         props.resourceHandlers,
         props.resolveRuntimeArtifact,
         props.settings,
@@ -127,11 +129,25 @@ export function Surface(props) {
                     theme: "system",
                 },
             },
-        }, createElement(loaded.Component)));
+        }, createElement(ReadySurface, {
+            Component: loaded.Component,
+            descriptor: loaded.descriptor,
+            onReady: construct.onSurfaceReady,
+            surfaceId: props.id,
+        })));
     }
     if (loadError)
         return props.children ?? null;
     return props.children ?? null;
+}
+function ReadySurface(input) {
+    useEffect(() => {
+        // This effect belongs to the generated subtree. It cannot run when module
+        // loading fails or the component throws during render, so hosts do not
+        // mistake a fallback for a successfully committed artifact.
+        input.onReady?.(input.descriptor, input.surfaceId);
+    }, [input.descriptor, input.onReady, input.surfaceId]);
+    return createElement(input.Component);
 }
 export function createSurfaceDescriptor(props) {
     return {

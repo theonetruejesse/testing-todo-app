@@ -31,6 +31,7 @@ export type ConstructProviderProps = {
     constructRuntime?: Record<string, unknown>;
     enabled?: boolean;
     onSurfaceError?: (error: unknown, surfaceId: ConstructId) => void;
+    onSurfaceReady?: (descriptor: ConstructRuntimeArtifactDescriptor, surfaceId: ConstructId) => void;
     resourceHandlers?: Record<string, (input: ConstructJsonValue | undefined) => Promise<unknown>>;
     resolveRuntimeArtifact?: (input: ConstructRuntimeArtifactResolutionInput) => Promise<ConstructRuntimeArtifactDescriptor | null>;
     settings?: Record<string, ConstructJsonValue>;

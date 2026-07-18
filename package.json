@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "check": "pnpm lint && pnpm typecheck"
+    "test": "tsx --test src/lib/construct-runtime/*.test.ts src/app/api/construct/runtime-artifacts/resolve/*.test.ts",
+    "check": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "dependencies": {
     "@construct/sdk": "file:./vendor/construct/packages/sdk",
@@ -23,6 +24,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "tsx": "^4.23.1",
     "typescript": "^5"
   }
 }

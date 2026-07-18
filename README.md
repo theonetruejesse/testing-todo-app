@@ -34,6 +34,28 @@ Copy `.env.example` to `.env.local` for local integration. The target secret and
 Platform API URL are server-only; generated artifact objects are revalidated and
 proxied through this app rather than exposing deployment credentials to the browser.
 
+### Selected-version preview
+
+`CONSTRUCT_RUNTIME_PREVIEWS_ENABLED=true` enables the managed iframe preview
+consumer. Platform opens a fresh document with a short-lived selector in
+`#construct-preview=<opaque selector>`. Client instrumentation captures it before
+hydration and immediately removes it from the address bar. The selector stays only
+in that document's memory and same-origin POST bodies.
+
+The host re-resolves the selector for the descriptor and every module/style object,
+then creates document-local Blob URLs. Expired, revoked, or tampered selectors fail
+closed and never fall back to the active production assignment. The default-off path
+continues to use the existing active resolver and object GET routes unchanged.
+
+After the generated subtree commits successfully, the iframe posts a non-secret
+`construct:runtime-ready` fingerprint to its parent. It contains the source,
+artifact/version ID, surface, content hash, and host build identity; it never contains
+the selector or deployment target secret.
+
+`CONSTRUCT_PLATFORM_WEB_ORIGIN` is required with previews. The exact origin is
+used both as the `postMessage` target and the CSP `frame-ancestors` source; wildcard
+parent messaging is not supported.
+
 ## Sandbox test commands
 
 These are the exact commands a sandbox should be able to run after cloning the repo.
