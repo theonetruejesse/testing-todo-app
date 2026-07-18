@@ -24,6 +24,9 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@construct/runtime':
+        specifier: file:./vendor/construct/packages/runtime
+        version: file:vendor/construct/packages/runtime(react@19.2.4)
       '@types/node':
         specifier: ^20
         version: 20.19.39

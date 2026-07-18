@@ -1,6 +1,7 @@
 import type { ConstructId } from "@construct/authority-manifest/manifest/primitives/shared";
 import type { ConstructJsonValue } from "@construct/runtime";
 import { type ReactNode } from "react";
+import { type CapabilityBinding, type CapabilityInvocationObserver } from "./capability-client.js";
 export type ConstructRuntimeArtifactScope = {
     runId?: string;
     workspaceTemplateId?: string;
@@ -27,11 +28,13 @@ export type ConstructProviderProps = {
     actionInvalidations?: Record<string, string[]>;
     artifactScope?: ConstructRuntimeArtifactScope;
     actionHandlers?: Record<string, (input: ConstructJsonValue) => Promise<unknown>>;
+    capabilityBinding?: CapabilityBinding;
     children?: ReactNode;
     constructRuntime?: Record<string, unknown>;
     enabled?: boolean;
     onSurfaceError?: (error: unknown, surfaceId: ConstructId) => void;
     onSurfaceReady?: (descriptor: ConstructRuntimeArtifactDescriptor, surfaceId: ConstructId) => void;
+    onCapabilityInvocation?: CapabilityInvocationObserver;
     resourceHandlers?: Record<string, (input: ConstructJsonValue | undefined) => Promise<unknown>>;
     resolveRuntimeArtifact?: (input: ConstructRuntimeArtifactResolutionInput) => Promise<ConstructRuntimeArtifactDescriptor | null>;
     settings?: Record<string, ConstructJsonValue>;

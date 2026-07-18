@@ -56,6 +56,24 @@ the selector or deployment target secret.
 used both as the `postMessage` target and the CSP `frame-ancestors` source; wildcard
 parent messaging is not supported.
 
+### Vendored Construct boundary
+
+The deployable host vendors `@construct/runtime` and `@construct/sdk` under
+`vendor/construct/packages`. Their source mirrors Construct's canonical packages,
+while the package manifests keep local `file:` dependencies so Vercel can install
+this repository without the Construct workspace.
+
+After synchronizing canonical source, rebuild the checked-in distributable boundary:
+
+```sh
+pnpm build:construct-vendor
+pnpm install
+pnpm check
+```
+
+The root test suite includes the canonical artifact JSX and capability-binding tests.
+This guards both the source mirror and the production `dist` modules consumed by Next.
+
 ## Sandbox test commands
 
 These are the exact commands a sandbox should be able to run after cloning the repo.

@@ -1,3 +1,4 @@
 export declare const CONSTRUCT_RUNTIME_APPROVED_IMPORTS: readonly ["ConstructActionButton", "ConstructField", "ConstructForm", "ConstructIcon", "ConstructLink", "ConstructResourceBoundary", "constructClassNames", "constructRange", "createConstructLocalContext", "useConstructAction", "useConstructActionForm", "useConstructFormat", "useConstructLocale", "useConstructLocalContext", "useConstructResource", "useConstructSetting", "useConstructSurface", "useConstructViewport"];
+export declare const CONSTRUCT_APPROVED_EVENT_PROPS: readonly ["onBlur", "onChange", "onClick", "onFocus", "onInput", "onKeyDown", "onSubmit"];
 export type ConstructRuntimeApprovedImport = (typeof CONSTRUCT_RUNTIME_APPROVED_IMPORTS)[number];
 //# sourceMappingURL=policy.d.ts.map

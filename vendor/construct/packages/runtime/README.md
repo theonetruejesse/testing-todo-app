@@ -5,6 +5,11 @@ React DSL validator. Generated TSX imports Construct primitives from this
 package instead of importing host clients, TanStack libraries, router adapters,
 browser APIs, or design-system internals directly.
 
+The same facade supports both runtime profiles. `trusted-same-realm` is the MVP
+production profile for exact, developer-approved artifacts; it maximizes normal
+React/browser expressiveness but is not containment. `isolated-iframe` is the
+future enterprise profile using a distinct origin and capability transport.
+
 The current implementation is a typed contract with inert placeholders. Host
 runtime loading will provide the real behavior for resources, actions, forms,
 navigation, formatting, and environment data. Pure helpers such as
@@ -19,3 +24,7 @@ Host loaders can import `loadConstructArtifactModule` from
 and Construct primitives through the `Symbol.for("construct.artifactRuntime")`
 slot during dynamic import, so host application bundlers do not compile
 generated surface code.
+
+Runtime loading must preserve immutable artifact identity, authority checks,
+monitoring, host fallback, and immediate revocation. Agent maintenance creates a
+new version and never silently replaces an active Managed Variant.

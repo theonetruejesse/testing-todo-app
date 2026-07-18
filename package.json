@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.11.0",
   "scripts": {
+    "build:construct-vendor": "pnpm --dir vendor/construct/packages/runtime build && pnpm --dir vendor/construct/packages/sdk build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/construct-runtime/*.test.ts src/app/api/construct/runtime-artifacts/resolve/*.test.ts",
+    "test": "tsx --test src/lib/construct-runtime/*.test.ts src/app/api/construct/runtime-artifacts/resolve/*.test.ts vendor/construct/packages/sdk/src/react/*.test.mjs",
     "check": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@construct/runtime": "file:./vendor/construct/packages/runtime",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

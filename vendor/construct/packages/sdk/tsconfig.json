@@ -1,9 +1,25 @@
 {
-  "extends": "@construct/tsconfig/base.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": true,
+    "declarationMap": true,
+    "jsx": "react-jsx",
     "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmitOnError": true,
+    "outDir": "dist",
+    "paths": {
+      "@construct/authority-manifest": ["../authority-manifest/dist/index.d.ts"],
+      "@construct/authority-manifest/*": ["../authority-manifest/dist/*"],
+      "@construct/runtime": ["../runtime/dist/index.d.ts"],
+      "@construct/runtime/*": ["../runtime/dist/*"]
+    },
     "rootDir": "src",
-    "outDir": "dist"
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2022"
   },
   "include": ["src/**/*.ts"]
 }

@@ -2,7 +2,8 @@
 import { loadConstructArtifactModule } from "@construct/runtime/loader";
 import * as ReactRuntime from "react";
 import { createContext, createElement, useCallback, useContext, useEffect, useId, useMemo, useReducer, useState, } from "react";
-import * as JsxRuntime from "react/jsx-runtime";
+import { artifactJsxRuntime } from "./artifact-jsx-runtime.js";
+import { createHandlerCapabilityBinding, } from "./capability-client.js";
 const ConstructContext = createContext(null);
 const artifactModuleCache = new Map();
 export function ConstructProvider(props) {
@@ -20,49 +21,68 @@ export function ConstructProvider(props) {
         });
         parent?.invalidateResources(resourceIds);
     }, [parent]);
-    const value = useMemo(() => ({
-        actionInvalidations: {
-            ...(parent?.actionInvalidations ?? {}),
-            ...(props.actionInvalidations ?? {}),
-        },
-        actionHandlers: {
+    const value = useMemo(() => {
+        const actionHandlers = {
             ...(parent?.actionHandlers ?? {}),
             ...(props.actionHandlers ?? {}),
-        },
-        artifactScope: {
-            ...(parent?.artifactScope ?? {}),
-            ...(props.artifactScope ?? {}),
-        },
-        constructRuntime: props.constructRuntime ?? parent?.constructRuntime ?? constructHostRuntime,
-        currentSurface: parent?.currentSurface,
-        enabled: props.enabled ?? parent?.enabled ?? true,
-        invalidateResources,
-        onSurfaceError: props.onSurfaceError ?? parent?.onSurfaceError,
-        onSurfaceReady: props.onSurfaceReady ?? parent?.onSurfaceReady,
-        resourceInvalidationVersion: {
-            ...(parent?.resourceInvalidationVersion ?? {}),
-            ...localResourceInvalidationVersion,
-        },
-        resourceHandlers: {
+        };
+        const actionInvalidations = {
+            ...(parent?.actionInvalidations ?? {}),
+            ...(props.actionInvalidations ?? {}),
+        };
+        const resourceHandlers = {
             ...(parent?.resourceHandlers ?? {}),
             ...(props.resourceHandlers ?? {}),
-        },
-        resolveRuntimeArtifact: props.resolveRuntimeArtifact ?? parent?.resolveRuntimeArtifact,
-        settings: {
-            ...(parent?.settings ?? {}),
-            ...(props.settings ?? {}),
-        },
-    }), [
+        };
+        const hasLegacyHandlers = Object.keys(actionHandlers).length > 0 || Object.keys(resourceHandlers).length > 0;
+        return {
+            actionInvalidations: {
+                ...actionInvalidations,
+            },
+            actionHandlers,
+            artifactScope: {
+                ...(parent?.artifactScope ?? {}),
+                ...(props.artifactScope ?? {}),
+            },
+            constructRuntime: props.constructRuntime ?? parent?.constructRuntime ?? constructHostRuntime,
+            capabilityBinding: props.capabilityBinding ??
+                (hasLegacyHandlers
+                    ? createHandlerCapabilityBinding({
+                        actionHandlers,
+                        actionInvalidations,
+                        resourceHandlers,
+                    })
+                    : (parent?.capabilityBinding ?? null)),
+            currentSurface: parent?.currentSurface,
+            enabled: props.enabled ?? parent?.enabled ?? true,
+            invalidateResources,
+            onSurfaceError: props.onSurfaceError ?? parent?.onSurfaceError,
+            onSurfaceReady: props.onSurfaceReady ?? parent?.onSurfaceReady,
+            onCapabilityInvocation: props.onCapabilityInvocation ?? parent?.onCapabilityInvocation,
+            resourceInvalidationVersion: {
+                ...(parent?.resourceInvalidationVersion ?? {}),
+                ...localResourceInvalidationVersion,
+            },
+            resourceHandlers,
+            resolveRuntimeArtifact: props.resolveRuntimeArtifact ?? parent?.resolveRuntimeArtifact,
+            settings: {
+                ...(parent?.settings ?? {}),
+                ...(props.settings ?? {}),
+            },
+        };
+    }, [
         parent,
         props.actionInvalidations,
         props.actionHandlers,
         props.artifactScope,
+        props.capabilityBinding,
         props.constructRuntime,
         props.enabled,
         invalidateResources,
         localResourceInvalidationVersion,
         props.onSurfaceError,
         props.onSurfaceReady,
+        props.onCapabilityInvocation,
         props.resourceHandlers,
         props.resolveRuntimeArtifact,
         props.settings,
@@ -155,13 +175,15 @@ export function createSurfaceDescriptor(props) {
         id: props.id,
         title: props.title,
         description: props.description,
+        audience: props.audience,
+        useCases: props.useCases,
     };
 }
 async function loadSurfaceComponent(input) {
     const cached = artifactModuleCache.get(input.moduleUrl) ??
         loadConstructArtifactModule(input.moduleUrl, {
             React: ReactRuntime,
-            jsxRuntime: JsxRuntime,
+            jsxRuntime: artifactJsxRuntime,
             ConstructRuntime: input.constructRuntime,
         }).then((module) => module.default);
     artifactModuleCache.set(input.moduleUrl, cached);
@@ -221,31 +243,27 @@ const constructHostRuntime = {
 };
 function useConstructResource(resourceId, options) {
     const construct = useContext(ConstructContext);
-    const handler = construct?.resourceHandlers[resourceId];
+    const binding = requireCapabilityBinding(construct?.capabilityBinding, "resource", resourceId);
+    // An approved artifact is only runnable inside a host that binds every
+    // capability it uses. Treat a missing binding as a surface integration
+    // failure so hosts cannot mistake an error fallback for a ready artifact.
     const invalidationVersion = construct?.resourceInvalidationVersion[resourceId] ?? 0;
     const [refreshNonce, refresh] = useReducer((value) => value + 1, 0);
-    const [state, setState] = useState({ status: handler ? "loading" : "error", data: undefined, error: undefined });
+    const [state, setState] = useState({ status: "loading", data: undefined, error: undefined });
     useEffect(() => {
         void invalidationVersion;
         void refreshNonce;
-        if (!handler) {
-            setState({
-                status: "error",
-                data: undefined,
-                error: {
-                    code: "construct.resource.missing-handler",
-                    message: `No Construct resource handler is registered for ${resourceId}.`,
-                },
-            });
-            return;
-        }
         let cancelled = false;
         const timeout = window.setTimeout(() => {
             setState((current) => ({ ...current, status: "loading", error: undefined }));
-            handler(options?.input)
-                .then((data) => {
+            invokeCapability(binding, {
+                capabilityId: resourceId,
+                kind: "resource",
+                input: options?.input,
+            }, construct?.onCapabilityInvocation)
+                .then((result) => {
                 if (!cancelled)
-                    setState({ status: "success", data: data, error: undefined });
+                    setState({ status: "success", data: result.data, error: undefined });
             })
                 .catch((error) => {
                 if (!cancelled) {
@@ -258,7 +276,8 @@ function useConstructResource(resourceId, options) {
             window.clearTimeout(timeout);
         };
     }, [
-        handler,
+        binding,
+        construct?.onCapabilityInvocation,
         invalidationVersion,
         options?.input,
         options?.inputDebounceMs,
@@ -274,7 +293,9 @@ function useConstructResource(resourceId, options) {
 }
 function useConstructAction(actionId) {
     const construct = useContext(ConstructContext);
-    const handler = construct?.actionHandlers[actionId];
+    const binding = requireCapabilityBinding(construct?.capabilityBinding, "action", actionId);
+    // Action-only surfaces must also fail before reporting runtime readiness;
+    // waiting for the first click would leave a visibly mounted but unusable UI.
     const invalidatedResourceIds = construct?.actionInvalidations[actionId] ?? [];
     const invalidateResources = construct?.invalidateResources;
     const [status, setStatus] = useState("idle");
@@ -287,22 +308,13 @@ function useConstructAction(actionId) {
             setError(undefined);
         },
         run: async (input) => {
-            if (!handler) {
-                const nextError = {
-                    code: "construct.action.missing-handler",
-                    message: `No Construct action handler is registered for ${actionId}.`,
-                };
-                setStatus("error");
-                setError(nextError);
-                throw nextError;
-            }
             setStatus("pending");
             setError(undefined);
             try {
-                const output = await handler(input);
+                const result = await invokeCapability(binding, { capabilityId: actionId, kind: "action", input: input }, construct?.onCapabilityInvocation);
                 setStatus("success");
-                invalidateResources?.(invalidatedResourceIds);
-                return output;
+                invalidateResources?.(result.invalidates?.length ? result.invalidates : invalidatedResourceIds);
+                return result.data;
             }
             catch (runError) {
                 const nextError = toConstructDisplayError(runError);
@@ -311,7 +323,32 @@ function useConstructAction(actionId) {
                 throw nextError;
             }
         },
-    }), [actionId, error, handler, invalidatedResourceIds, invalidateResources, status]);
+    }), [
+        actionId,
+        binding,
+        construct?.onCapabilityInvocation,
+        error,
+        invalidatedResourceIds,
+        invalidateResources,
+        status,
+    ]);
+}
+function requireCapabilityBinding(binding, kind, capabilityId) {
+    if (!binding) {
+        throw new Error(`No Construct ${kind} binding is registered for ${capabilityId}.`);
+    }
+    return binding;
+}
+async function invokeCapability(binding, invocation, observer) {
+    try {
+        const result = await binding.invoke(invocation);
+        observer?.(invocation, { status: "success", data: result.data });
+        return result;
+    }
+    catch (error) {
+        observer?.(invocation, { status: "error", error });
+        throw error;
+    }
 }
 function useConstructActionForm(actionId) {
     const action = useConstructAction(actionId);
