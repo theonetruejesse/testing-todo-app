@@ -5,26 +5,9 @@ export type Todo = {
   priority: boolean;
 };
 
-const todos: Todo[] = [
-  {
-    id: "seed-1",
-    title: "Clone this repo into a sandbox",
-    completed: false,
-    priority: false,
-  },
-  {
-    id: "seed-2",
-    title: "Run install, lint, and build",
-    completed: false,
-    priority: false,
-  },
-  {
-    id: "seed-3",
-    title: "Expose the Next.js dev server",
-    completed: false,
-    priority: false,
-  },
-];
+// The host starts empty so Construct-generated fixtures are never confused
+// with application-owned seed records during workspace evaluation.
+const todos: Todo[] = [];
 
 export function listTodos(): Todo[] {
   return todos;

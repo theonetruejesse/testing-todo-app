@@ -73,8 +73,9 @@ pnpm build
 pnpm dev --hostname 0.0.0.0 --port 3000
 ```
 
-The todo store is intentionally in-memory. Restarting the development server
-resets its records.
+The todo store is intentionally empty and in-memory. Restarting the development
+server clears its records; the host does not seed examples that could be
+mistaken for Construct-generated synthetic data.
 
 ## Todo API
 
