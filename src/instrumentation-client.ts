@@ -1,5 +1,5 @@
-import { captureConstructPreviewSelector } from "@construct/sdk/next/client";
+import { captureConstructReleaseSelection } from "@construct/sdk/next/client";
 
-// Capture regardless of the server feature flag. A selector presented to a
-// disabled consumer must still be scrubbed and must never reach the active path.
-captureConstructPreviewSelector({ document, history, location });
+// Published release IDs are public, shareable selectors. Capture the initial
+// selection once so client navigation cannot silently change a mounted surface.
+captureConstructReleaseSelection({ document, location });

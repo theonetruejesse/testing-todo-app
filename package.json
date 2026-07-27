@@ -12,7 +12,7 @@
     "check": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "dependencies": {
-    "@construct/sdk": "file:./vendor/construct-packages/construct-sdk-c7ea3ddc43dce80f.tgz",
+    "@construct/sdk": "file:./vendor/construct-packages/construct-sdk-9aec217b1e40ab48.tgz",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",

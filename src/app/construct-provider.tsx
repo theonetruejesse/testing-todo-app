@@ -9,13 +9,6 @@ import type { ReactNode } from "react";
 
 type JsonRecord = Record<string, ConstructJsonValue>;
 
-interface LocalConstructProviderProps {
-  children: ReactNode;
-  hostBuildId: string;
-  platformWebOrigin: string;
-  previewEnabled: boolean;
-}
-
 const resourceHandlers: NonNullable<ConstructNextProviderProps["resourceHandlers"]> = {
   "todos.list": async () => {
     const response = await fetch("/api/todos");
@@ -63,19 +56,11 @@ const actionHandlers: NonNullable<ConstructNextProviderProps["actionHandlers"]> 
   },
 };
 
-export function LocalConstructProvider({
-  children,
-  hostBuildId,
-  platformWebOrigin,
-  previewEnabled,
-}: LocalConstructProviderProps) {
+export function LocalConstructProvider({ children }: { children: ReactNode }) {
   return (
     <ConstructNextProvider
       actionHandlers={actionHandlers}
       actionInvalidations={actionInvalidations}
-      hostBuildId={hostBuildId}
-      platformWebOrigin={platformWebOrigin}
-      previewEnabled={previewEnabled}
       resourceHandlers={resourceHandlers}
     >
       {children}

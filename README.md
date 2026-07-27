@@ -34,17 +34,15 @@ invoke.
 capability IDs to the todo APIs. `ConstructNextProvider` owns the reusable
 runtime transport.
 
-The three routes under `/api/construct/runtime-artifacts` are deliberately thin
-exports from the SDK server adapter:
+The route under `/api/construct/runtime-artifacts` is a deliberately thin
+export from the SDK server adapter:
 
 - `POST /api/construct/runtime-artifacts/resolve`
-- `POST /api/construct/runtime-artifacts/preview-object`
-- `GET /api/construct/runtime-artifacts/objects/:artifactId/:kind`
 
 Copy `.env.example` to `.env.local` for local integration. Target credentials
-remain server-only. Selected-version preview selectors are short-lived,
-document-scoped, removed from the address bar before hydration, and revalidated
-for every private artifact object.
+remain server-only. The plain production URL resolves the active default;
+`?construct=<releaseId>` resolves an exact immutable release. Draft previews
+never load in this host and are delivered from Construct-owned preview origins.
 
 ## Construct package boundary
 

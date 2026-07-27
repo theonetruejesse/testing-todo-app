@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { constructRuntimeHostConfigFromEnv } from "@construct/sdk/next/server";
 import { LocalConstructProvider } from "./construct-provider";
 import "./globals.css";
 
@@ -19,8 +18,6 @@ export const metadata: Metadata = {
   description: "A minimal Next.js todo app for sandbox ingestion tests.",
 };
 
-const constructRuntime = constructRuntimeHostConfigFromEnv(process.env);
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,13 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <LocalConstructProvider
-          hostBuildId={constructRuntime.hostBuildId}
-          platformWebOrigin={constructRuntime.platformWebOrigin}
-          previewEnabled={constructRuntime.previewEnabled}
-        >
-          {children}
-        </LocalConstructProvider>
+        <LocalConstructProvider>{children}</LocalConstructProvider>
       </body>
     </html>
   );
