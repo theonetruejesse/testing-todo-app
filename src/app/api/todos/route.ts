@@ -7,6 +7,7 @@ const todoSchema = z.object({
   id: z.string().uuid().describe("Stable todo identifier"),
   title: z.string().min(1).max(120).describe("Short description of the work item"),
   completed: z.boolean().describe("Whether the work item is complete"),
+  priority: z.boolean().describe("Whether the work item is marked as a priority"),
 });
 
 export const operations = defineRouteOperations({
@@ -35,6 +36,7 @@ export const operations = defineRouteOperations({
     },
     input: z.object({
       title: z.string().min(1).max(120).describe("Title of the new work item"),
+      priority: z.boolean().optional().describe("Whether the new work item is a priority"),
     }),
     output: todoSchema,
     invalidates: ["todos.list"],
@@ -46,12 +48,15 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const body = (await request.json().catch(() => null)) as { title?: unknown } | null;
+  const body = (await request.json().catch(() => null)) as
+    | { priority?: unknown; title?: unknown }
+    | null;
   const title = typeof body?.title === "string" ? body.title.trim() : "";
+  const priority = body?.priority === true;
 
   if (!title) {
     return NextResponse.json({ error: "title is required" }, { status: 400 });
   }
 
-  return NextResponse.json({ todo: createTodo(title) }, { status: 201 });
+  return NextResponse.json({ todo: createTodo(title, priority) }, { status: 201 });
 }

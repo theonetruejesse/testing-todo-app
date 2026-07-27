@@ -1,1 +1,0 @@
-{"version":3,"file":"identity.d.ts","sourceRoot":"","sources":["../../../../src/manifest/primitives/project/identity.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,cAAc,CAAC;AAIhD,MAAM,MAAM,oBAAoB,GAAG;IACjC,EAAE,EAAE,WAAW,CAAC;IAChB,IAAI,EAAE,MAAM,CAAC;IACb,WAAW,CAAC,EAAE,MAAM,CAAC;CACtB,CAAC"}

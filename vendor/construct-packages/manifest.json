@@ -1,0 +1,20 @@
+{
+  "packages": [
+    {
+      "file": "construct-authority-manifest-51ab06ee103b5732.tgz",
+      "name": "@construct/authority-manifest",
+      "sha256": "51ab06ee103b5732c5b36a140616850e40748a00695df38a4a71e61900f0d773"
+    },
+    {
+      "file": "construct-runtime-75e8c47fd9e9d80e.tgz",
+      "name": "@construct/runtime",
+      "sha256": "75e8c47fd9e9d80ed53bf1dd6e590f4a8bba072575d5772060737e86cebcb20a"
+    },
+    {
+      "file": "construct-sdk-c7ea3ddc43dce80f.tgz",
+      "name": "@construct/sdk",
+      "sha256": "c7ea3ddc43dce80fe4fde955ed6770dd5893f320caf4aadec60f2b44c7c88e03"
+    }
+  ],
+  "version": "0.0.0-blueprint"
+}

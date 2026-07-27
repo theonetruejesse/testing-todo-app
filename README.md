@@ -1,13 +1,17 @@
 # Test Todo App
 
-A minimal public-repo-ready Next.js todo app for testing sandbox runtime flows.
+A minimal Next.js application used to qualify Construct project setup, sandbox
+lifecycles, Managed Variants, and runtime capability bindings.
 
-It has:
+The repository intentionally owns only application behavior:
 
-- A browser UI at `/`
-- Todo API routes under `/api/todos`
-- In-memory server-side todo storage
-- Scripts for install, lint, build, and container-friendly dev startup
+- Todo UI and API routes
+- The `todos.main` surface declaration
+- Todo resource/action declarations and handlers
+- Thin Next route exports for the Construct SDK host runtime
+
+Generic preview selection, artifact proxying, CSP policy, readiness attestation,
+and runtime React behavior live in `@construct/sdk`.
 
 ## Local run
 
@@ -20,99 +24,63 @@ pnpm dev
 
 Open `http://localhost:3000`.
 
-## Local Construct runtime surfaces
+## Construct integration
 
-The app wraps its root layout with `LocalConstructProvider`. When local
-Construct services are running, `<Surface id="todos.main">` asks the app's
-same-origin server route for the artifact assigned to this deployment target:
+`src/app/page.tsx` declares the `todos.main` surface. Todo API routes use
+`defineRouteOperations` to describe the capabilities generated variants may
+invoke.
 
-```txt
-http://localhost:3000/api/construct/runtime-artifacts/resolve
-```
+`src/app/construct-provider.tsx` contains the app-owned mapping from those
+capability IDs to the todo APIs. `ConstructNextProvider` owns the reusable
+runtime transport.
 
-Copy `.env.example` to `.env.local` for local integration. The target secret and
-Platform API URL are server-only; generated artifact objects are revalidated and
-proxied through this app rather than exposing deployment credentials to the browser.
+The three routes under `/api/construct/runtime-artifacts` are deliberately thin
+exports from the SDK server adapter:
 
-### Selected-version preview
+- `POST /api/construct/runtime-artifacts/resolve`
+- `POST /api/construct/runtime-artifacts/preview-object`
+- `GET /api/construct/runtime-artifacts/objects/:artifactId/:kind`
 
-`CONSTRUCT_RUNTIME_PREVIEWS_ENABLED=true` enables the managed iframe preview
-consumer. Platform opens a fresh document with a short-lived selector in
-`#construct-preview=<opaque selector>`. Client instrumentation captures it before
-hydration and immediately removes it from the address bar. The selector stays only
-in that document's memory and same-origin POST bodies.
+Copy `.env.example` to `.env.local` for local integration. Target credentials
+remain server-only. Selected-version preview selectors are short-lived,
+document-scoped, removed from the address bar before hydration, and revalidated
+for every private artifact object.
 
-The host re-resolves the selector for the descriptor and every module/style object,
-then creates document-local Blob URLs. Expired, revoked, or tampered selectors fail
-closed and never fall back to the active production assignment. The default-off path
-continues to use the existing active resolver and object GET routes unchanged.
+## Construct package boundary
 
-After the generated subtree commits successfully, the iframe posts a non-secret
-`construct:runtime-ready` fingerprint to its parent. It contains the source,
-artifact/version ID, surface, content hash, and host build identity; it never contains
-the selector or deployment target secret.
+The application consumes content-addressed packages from
+`vendor/construct-packages`. These are immutable blueprint release artifacts,
+not an editable copy of Construct source. Their SHA-256 values are recorded in
+`manifest.json`.
 
-`CONSTRUCT_PLATFORM_WEB_ORIGIN` is required with previews. The exact origin is
-used both as the `postMessage` target and the CSP `frame-ancestors` source; wildcard
-parent messaging is not supported.
-
-### Vendored Construct boundary
-
-The deployable host vendors `@construct/runtime` and `@construct/sdk` under
-`vendor/construct/packages`. Their source mirrors Construct's canonical packages,
-while the package manifests keep local `file:` dependencies so Vercel can install
-this repository without the Construct workspace.
-
-After synchronizing canonical source, rebuild the checked-in distributable boundary:
+The canonical Construct repository regenerates them with:
 
 ```sh
-pnpm build:construct-vendor
-pnpm install
-pnpm check
+pnpm sdk:pack-consumer -- /absolute/path/to/testing-todo-app/vendor/construct-packages
 ```
 
-The root test suite includes the canonical artifact JSX and capability-binding tests.
-This guards both the source mirror and the production `dist` modules consumed by Next.
+Registry versions can replace the archives later without changing application
+imports.
 
-## Sandbox test commands
+## Sandbox qualification
 
-These are the exact commands a sandbox should be able to run after cloning the repo.
+These commands must work after a clean Git clone:
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
 pnpm check
 pnpm build
 pnpm dev --hostname 0.0.0.0 --port 3000
 ```
 
-For npm-only environments:
+The todo store is intentionally in-memory. Restarting the development server
+resets its records.
 
-```sh
-npm install
-npm run check
-npm run build
-npm run dev -- --hostname 0.0.0.0 --port 3000
-```
-
-The important sandbox detail is `--hostname 0.0.0.0`; it lets remote container port forwarding reach the Next.js dev server.
-
-## API
+## Todo API
 
 ```txt
 GET    /api/todos
 POST   /api/todos
 PATCH  /api/todos/:id
 DELETE /api/todos/:id
-```
-
-Todo data is intentionally in-memory. Restarting the dev server resets it.
-
-## Publish to GitHub
-
-Create an empty GitHub repository, then run:
-
-```sh
-git remote add origin git@github.com:<your-user>/<your-repo>.git
-git branch -M main
-git push -u origin main
 ```

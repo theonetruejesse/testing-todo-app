@@ -1,1 +1,0 @@
-{"version":3,"file":"capability-bindings.d.ts","sourceRoot":"","sources":["../../src/react/capability-bindings.ts"],"names":[],"mappings":"AAAA,qBAAa,+BAAgC,SAAQ,KAAK;IACxD,QAAQ,CAAC,IAAI,0CAA0C;gBAE3C,IAAI,EAAE,QAAQ,GAAG,UAAU,EAAE,YAAY,EAAE,MAAM;CAI9D;AAID,wBAAgB,iCAAiC,CAAC,QAAQ,EACxD,OAAO,EAAE,QAAQ,GAAG,SAAS,EAC7B,IAAI,EAAE,QAAQ,GAAG,UAAU,EAC3B,YAAY,EAAE,MAAM,GACnB,QAAQ,CAGV"}

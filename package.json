@@ -3,24 +3,22 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.11.0",
   "scripts": {
-    "build:construct-vendor": "pnpm --dir vendor/construct/packages/runtime build && pnpm --dir vendor/construct/packages/sdk build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/construct-runtime/*.test.ts src/app/api/construct/runtime-artifacts/resolve/*.test.ts vendor/construct/packages/sdk/src/react/*.test.mjs",
+    "test": "tsx --test src/app/api/todos/*.test.ts",
     "check": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "dependencies": {
-    "@construct/sdk": "file:./vendor/construct/packages/sdk",
+    "@construct/sdk": "file:./vendor/construct-packages/construct-sdk-c7ea3ddc43dce80f.tgz",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@construct/runtime": "file:./vendor/construct/packages/runtime",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -28,5 +26,11 @@
     "eslint-config-next": "16.2.4",
     "tsx": "^4.23.1",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@construct/authority-manifest": "file:./vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz",
+      "@construct/runtime": "file:./vendor/construct-packages/construct-runtime-75e8c47fd9e9d80e.tgz"
+    }
   }
 }

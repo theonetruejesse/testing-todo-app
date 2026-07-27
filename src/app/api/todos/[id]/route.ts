@@ -7,6 +7,7 @@ const todoSchema = z.object({
   id: z.string().uuid().describe("Stable todo identifier"),
   title: z.string().min(1).max(120).describe("Short description of the work item"),
   completed: z.boolean().describe("Whether the work item is complete"),
+  priority: z.boolean().describe("Whether the work item is marked as a priority"),
 });
 
 type RouteContext = {
@@ -20,11 +21,12 @@ export const operations = defineRouteOperations({
     kind: "action",
     id: "todos.update",
     title: "Update todo",
-    description: "Update a todo item's title or completed state.",
+    description: "Update a todo item's title, completed state, or priority.",
     input: z.object({
       id: z.string().uuid(),
       title: z.string().min(1).max(120).optional(),
       completed: z.boolean().optional(),
+      priority: z.boolean().optional(),
     }),
     output: todoSchema,
     invalidates: ["todos.list"],
@@ -43,11 +45,12 @@ export const operations = defineRouteOperations({
 export async function PATCH(request: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   const body = (await request.json().catch(() => null)) as
-    | { completed?: unknown; title?: unknown }
+    | { completed?: unknown; priority?: unknown; title?: unknown }
     | null;
 
   const todo = updateTodo(id, {
     completed: typeof body?.completed === "boolean" ? body.completed : undefined,
+    priority: typeof body?.priority === "boolean" ? body.priority : undefined,
     title: typeof body?.title === "string" ? body.title : undefined,
   });
 

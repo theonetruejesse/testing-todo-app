@@ -4,13 +4,17 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@construct/authority-manifest': file:./vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz
+  '@construct/runtime': file:./vendor/construct-packages/construct-runtime-75e8c47fd9e9d80e.tgz
+
 importers:
 
   .:
     dependencies:
       '@construct/sdk':
-        specifier: file:./vendor/construct/packages/sdk
-        version: file:vendor/construct/packages/sdk(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: file:./vendor/construct-packages/construct-sdk-c7ea3ddc43dce80f.tgz
+        version: file:vendor/construct-packages/construct-sdk-c7ea3ddc43dce80f.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.2.4
         version: 16.2.4(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -24,9 +28,6 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
-      '@construct/runtime':
-        specifier: file:./vendor/construct/packages/runtime
-        version: file:vendor/construct/packages/runtime(react@19.2.4)
       '@types/node':
         specifier: ^20
         version: 20.19.39
@@ -118,16 +119,19 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
-  '@construct/authority-manifest@file:vendor/construct/packages/authority-manifest':
-    resolution: {directory: vendor/construct/packages/authority-manifest, type: directory}
+  '@construct/authority-manifest@file:vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz':
+    resolution: {integrity: sha512-4Aw6eXvxFoMBDPCPdn7lHwBr6+/+VmGRmxmTP5rDaPqCLNcyqeeXgdqI+5HJZoOAX2huUjSYF+3a3zge7YMSQQ==, tarball: file:vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz}
+    version: 0.0.0-blueprint
 
-  '@construct/runtime@file:vendor/construct/packages/runtime':
-    resolution: {directory: vendor/construct/packages/runtime, type: directory}
+  '@construct/runtime@file:vendor/construct-packages/construct-runtime-75e8c47fd9e9d80e.tgz':
+    resolution: {integrity: sha512-AZVdSPVaxcK6+RYcPKAybaUmh9rKMlG8ejSlrzwgTfjaxelY0dCmCnLnDkpU9AYKxO5WTcTKXrxKvMoVyOy40Q==, tarball: file:vendor/construct-packages/construct-runtime-75e8c47fd9e9d80e.tgz}
+    version: 0.0.0-blueprint
     peerDependencies:
       react: '>=19'
 
-  '@construct/sdk@file:vendor/construct/packages/sdk':
-    resolution: {directory: vendor/construct/packages/sdk, type: directory}
+  '@construct/sdk@file:vendor/construct-packages/construct-sdk-c7ea3ddc43dce80f.tgz':
+    resolution: {integrity: sha512-FIQxQuPvdCI6xspdhRKPeDDQdzUJP3eo9xr+CsBXiUBWBZ8lKAg7DUyictG2W/sb2UJMZWL80B7lcEnyE4jXEQ==, tarball: file:vendor/construct-packages/construct-sdk-c7ea3ddc43dce80f.tgz}
+    version: 0.0.0-blueprint
     peerDependencies:
       react: '>=19'
       react-dom: '>=19'
@@ -2024,16 +2028,16 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@construct/authority-manifest@file:vendor/construct/packages/authority-manifest': {}
+  '@construct/authority-manifest@file:vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz': {}
 
-  '@construct/runtime@file:vendor/construct/packages/runtime(react@19.2.4)':
+  '@construct/runtime@file:vendor/construct-packages/construct-runtime-75e8c47fd9e9d80e.tgz(react@19.2.4)':
     dependencies:
       react: 19.2.4
 
-  '@construct/sdk@file:vendor/construct/packages/sdk(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@construct/sdk@file:vendor/construct-packages/construct-sdk-c7ea3ddc43dce80f.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
-      '@construct/authority-manifest': file:vendor/construct/packages/authority-manifest
-      '@construct/runtime': file:vendor/construct/packages/runtime(react@19.2.4)
+      '@construct/authority-manifest': file:vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz
+      '@construct/runtime': file:vendor/construct-packages/construct-runtime-75e8c47fd9e9d80e.tgz(react@19.2.4)
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
