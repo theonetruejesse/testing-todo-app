@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createTodo, deleteTodo, updateTodo } from "./store";
+import { createTodo, deleteTodo, updateTodo } from "./store.ts";
 
 test("persists priority through create and update capability paths", () => {
   const todo = createTodo("priority contract probe", true);

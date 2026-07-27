@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/app/api/todos/*.test.ts",
+    "test": "node --test --experimental-strip-types src/app/api/todos/*.test.ts",
     "check": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "dependencies": {
@@ -24,7 +24,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
-    "tsx": "^4.23.1",
     "typescript": "^5"
   },
   "pnpm": {
