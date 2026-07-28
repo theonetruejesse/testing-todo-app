@@ -1,13 +1,27 @@
-export type Todo = {
-  id: string;
-  title: string;
-  completed: boolean;
-  priority: boolean;
-};
+import type { Todo } from "../../../lib/todo-contract.ts";
 
-// The host starts empty so Construct-generated fixtures are never confused
-// with application-owned seed records during workspace evaluation.
-const todos: Todo[] = [];
+// These are application-owned examples, not generated fixtures. Stable UUIDs
+// keep the host demo recognizable while satisfying the public API contract.
+const todos: Todo[] = [
+  {
+    id: "00000000-0000-4000-8000-000000000001",
+    title: "Clone this repo into a sandbox",
+    completed: false,
+    priority: false,
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000002",
+    title: "Run install, lint, and build",
+    completed: false,
+    priority: false,
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000003",
+    title: "Expose the Next.js dev server",
+    completed: false,
+    priority: false,
+  },
+];
 
 export function listTodos(): Todo[] {
   return todos;

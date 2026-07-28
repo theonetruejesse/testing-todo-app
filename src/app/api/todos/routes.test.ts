@@ -7,7 +7,24 @@ import { GET, POST } from "./route.ts";
 test("todo routes expose the exact declared CRUD wire shapes", async () => {
   const initialResponse = await GET();
   assert.equal(initialResponse.status, 200);
-  assert.deepEqual(await initialResponse.json(), []);
+  const initialTodos = (await initialResponse.json()) as Array<{
+    completed: boolean;
+    id: string;
+    priority: boolean;
+    title: string;
+  }>;
+  assert.equal(initialTodos.length, 3);
+  assert.deepEqual(
+    initialTodos.map((todo) => todo.title),
+    [
+      "Clone this repo into a sandbox",
+      "Run install, lint, and build",
+      "Expose the Next.js dev server",
+    ],
+  );
+  for (const todo of initialTodos) {
+    assert.match(todo.id, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-8[0-9a-f]{3}-[0-9a-f]{12}$/);
+  }
 
   const createResponse = await POST(
     jsonRequest("/api/todos", "POST", {
@@ -39,7 +56,7 @@ test("todo routes expose the exact declared CRUD wire shapes", async () => {
   assert.equal("todo" in createdTodo, false);
 
   const listResponse = await GET();
-  assert.deepEqual(await listResponse.json(), [createdTodo]);
+  assert.deepEqual(await listResponse.json(), [createdTodo, ...initialTodos]);
 
   const updateResponse = await PATCH(
     jsonRequest(`/api/todos/${createdTodo.id}`, "PATCH", {
@@ -65,7 +82,7 @@ test("todo routes expose the exact declared CRUD wire shapes", async () => {
   assert.equal(await deleteResponse.text(), "");
 
   const finalResponse = await GET();
-  assert.deepEqual(await finalResponse.json(), []);
+  assert.deepEqual(await finalResponse.json(), initialTodos);
 
   const invalidCreateResponse = await POST(
     jsonRequest("/api/todos", "POST", { title: " ".repeat(3) }),

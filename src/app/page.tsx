@@ -4,28 +4,34 @@ import { TodoApp } from "./components/todo-app";
 export default function Home() {
   return (
     <main className="shell">
-      <Surface
-        id="todos.main"
-        title="Todo workspace"
-        description="Helps individuals organize, prioritize, and complete their current work."
-        audience="Individual contributors"
-        loadingFallback={<TodoSurfaceSkeleton />}
-        useCases={["Plan current work", "Track completion", "Review progress"]}
-      >
-        <TodoApp />
-      </Surface>
+      <section className="panel">
+        <header className="masthead">
+          <p className="eyebrow">Next.js sandbox target</p>
+          <h1>Todo Runtime Check</h1>
+          <p>
+            A deliberately small app with a browser UI and API routes. It is meant to be cloned,
+            checked, built, and launched inside a remote sandbox.
+          </p>
+        </header>
+
+        <Surface
+          id="todos.main"
+          title="Todo workspace"
+          description="Helps individuals organize, prioritize, and complete their current work."
+          audience="Individual contributors"
+          loadingFallback={<TodoSurfaceSkeleton />}
+          useCases={["Plan current work", "Track completion", "Review progress"]}
+        >
+          <TodoApp />
+        </Surface>
+      </section>
     </main>
   );
 }
 
 function TodoSurfaceSkeleton() {
   return (
-    <section aria-label="Loading published workspace" className="panel" role="status">
-      <header className="masthead">
-        <p className="eyebrow">Todo notebook</p>
-        <h1>Loading workspace…</h1>
-        <p>Resolving the selected production release.</p>
-      </header>
+    <div aria-label="Loading published workspace" className="todoWorkspace" role="status">
       <div className="composer" aria-hidden="true">
         <span className="skeletonLine" />
       </div>
@@ -33,6 +39,6 @@ function TodoSurfaceSkeleton() {
         <span className="skeletonCard" />
         <span className="skeletonCard" />
       </div>
-    </section>
+    </div>
   );
 }

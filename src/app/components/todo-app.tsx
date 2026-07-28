@@ -2,7 +2,7 @@
 
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
-import type { Todo } from "../api/todos/store";
+import type { Todo } from "../../lib/todo-contract";
 
 export function TodoApp() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -104,16 +104,7 @@ export function TodoApp() {
   const completed = todos.filter((todo) => todo.completed).length;
 
   return (
-    <section className="panel">
-      <div className="masthead">
-        <p className="eyebrow">Todo notebook</p>
-        <h1>Make room for what matters.</h1>
-        <p>
-          A small, focused place to capture your next move. Start with one thing you want to
-          finish.
-        </p>
-      </div>
-
+    <div className="todoWorkspace">
       <form className="composer" onSubmit={createTodo}>
         <input
           aria-label="Todo title"
@@ -180,6 +171,6 @@ export function TodoApp() {
           })}
         </ul>
       )}
-    </section>
+    </div>
   );
 }

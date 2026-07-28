@@ -1,20 +1,11 @@
 import { defineRouteOperations } from "@construct/sdk/next";
 import { NextRequest, NextResponse } from "next/server.js";
 import { z } from "zod";
+import {
+  todoSchema,
+  updateTodoFieldsSchema,
+} from "../../../../lib/todo-contract.ts";
 import { deleteTodo, updateTodo } from "../store.ts";
-
-const todoSchema = z.object({
-  id: z.string().uuid().describe("Stable todo identifier"),
-  title: z.string().min(1).max(120).describe("Short description of the work item"),
-  completed: z.boolean().describe("Whether the work item is complete"),
-  priority: z.boolean().describe("Whether the work item is marked as a priority"),
-});
-
-const updateTodoFieldsSchema = z.object({
-  title: z.string().trim().min(1).max(120).optional(),
-  completed: z.boolean().optional(),
-  priority: z.boolean().optional(),
-});
 
 type RouteContext = {
   params: Promise<{

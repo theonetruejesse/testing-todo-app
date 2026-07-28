@@ -1,14 +1,13 @@
 :root {
-  --background: #edf3f8;
-  --foreground: #172033;
-  --muted: #667085;
-  --panel: #fffdf9;
-  --line: #d9e0e9;
-  --accent: #275dcc;
-  --accent-strong: #163c8c;
-  --accent-soft: #e9efff;
-  --warm: #ef765f;
-  --danger: #ad3d39;
+  --background: #f4f1ea;
+  --foreground: #171717;
+  --muted: #686159;
+  --panel: #fffdf8;
+  --line: #d8d0c3;
+  --accent: #0f6b58;
+  --accent-strong: #083d33;
+  --accent-soft: #e3f0ec;
+  --danger: #9f2f1f;
 }
 
 html,
@@ -21,10 +20,7 @@ body {
 body {
   margin: 0;
   color: var(--foreground);
-  background:
-    radial-gradient(circle at 8% 12%, rgb(239 118 95 / 18%), transparent 28rem),
-    radial-gradient(circle at 92% 86%, rgb(39 93 204 / 16%), transparent 32rem),
-    var(--background);
+  background: var(--background);
   font-family: var(--font-geist-sans), sans-serif;
 }
 
@@ -41,44 +37,38 @@ input {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: 64px 24px;
+  padding: 48px 20px;
 }
 
 .panel {
-  width: min(720px, 100%);
-  padding: clamp(28px, 5vw, 52px);
+  width: min(760px, 100%);
+  padding: 32px;
   border: 1px solid var(--line);
-  border-radius: 28px 28px 28px 8px;
+  border-radius: 8px;
   background: var(--panel);
-  box-shadow:
-    0 24px 70px rgb(39 58 90 / 14%),
-    0 2px 8px rgb(39 58 90 / 6%);
-  animation: panel-arrive 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  box-shadow: 0 18px 50px rgb(23 23 23 / 10%);
 }
 
 .masthead {
   display: grid;
-  gap: 12px;
-  margin-bottom: 34px;
+  gap: 10px;
+  margin-bottom: 28px;
 }
 
 .eyebrow {
-  width: fit-content;
   margin: 0;
   color: var(--accent);
-  font-size: 12px;
-  font-weight: 750;
-  letter-spacing: 0.12em;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
 h1 {
   margin: 0;
-  max-width: 620px;
-  font-size: clamp(40px, 7vw, 66px);
-  font-weight: 650;
-  line-height: 0.98;
-  letter-spacing: -0.055em;
+  font-size: clamp(36px, 6vw, 68px);
+  line-height: 0.95;
+  letter-spacing: 0;
 }
 
 p {
@@ -87,54 +77,34 @@ p {
   line-height: 1.55;
 }
 
-.masthead > p:last-child {
-  max-width: 570px;
-  font-size: 16px;
+.todoWorkspace {
+  width: 100%;
 }
 
 .composer {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 12px;
+  gap: 10px;
 }
 
 .composer input {
   min-width: 0;
-  height: 52px;
-  padding: 0 17px;
+  height: 48px;
+  padding: 0 14px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 6px;
   background: white;
   color: var(--foreground);
-  outline: none;
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease;
-}
-
-.composer input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgb(39 93 204 / 12%);
 }
 
 .composer button,
 .delete,
 .checkbox {
-  height: 52px;
+  height: 48px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 700;
-  transition:
-    transform 140ms ease,
-    opacity 140ms ease,
-    background 140ms ease;
-}
-
-.composer button:hover:not(:disabled),
-.delete:hover:not(:disabled),
-.checkbox:hover:not(:disabled) {
-  transform: translateY(-1px);
 }
 
 .composer button:disabled,
@@ -146,8 +116,7 @@ p {
 }
 
 .composer button {
-  min-width: 116px;
-  padding: 0 22px;
+  padding: 0 24px;
   color: white;
   background: var(--accent);
 }
@@ -155,31 +124,26 @@ p {
 .summary {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px;
-  margin: 22px 0;
+  gap: 8px;
+  margin: 18px 0;
 }
 
 .summary span {
-  padding: 7px 11px;
-  border: 1px solid #e1e6ee;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
   border-radius: 999px;
-  color: #596276;
-  background: #f7f9fc;
-  font-size: 12px;
-  font-weight: 650;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .notice {
-  margin-top: 14px;
-  padding: 11px 13px;
-  border-radius: 10px;
+  margin-top: 12px;
   color: var(--danger);
-  background: #fff0ed;
 }
 
 .todoList {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -191,8 +155,8 @@ p {
   place-items: center;
   min-height: 220px;
   padding: 36px;
-  border: 1px dashed #c9d2df;
-  border-radius: 18px;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
   text-align: center;
 }
 
@@ -202,7 +166,7 @@ p {
 
 .emptyState {
   gap: 8px;
-  background: #f8fafc;
+  background: #faf8f3;
 }
 
 .emptyState > span {
@@ -211,9 +175,9 @@ p {
   height: 50px;
   place-items: center;
   margin-bottom: 6px;
-  border-radius: 50%;
+  border-radius: 6px;
   color: white;
-  background: var(--warm);
+  background: var(--accent);
   font-size: 24px;
   font-weight: 750;
   transform: rotate(-6deg);
@@ -233,31 +197,19 @@ p {
 .skeletonLine,
 .skeletonCard {
   display: block;
-  border-radius: 12px;
-  background: linear-gradient(90deg, #e7ecf2 25%, #f4f7fa 50%, #e7ecf2 75%);
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e7e2d9 25%, #f7f4ee 50%, #e7e2d9 75%);
   background-size: 200% 100%;
   animation: skeleton-pulse 1.4s ease-in-out infinite;
 }
 
 .skeletonLine {
   grid-column: 1 / -1;
-  height: 52px;
+  height: 48px;
 }
 
 .skeletonCard {
-  height: 62px;
-}
-
-@keyframes panel-arrive {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.99);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  height: 58px;
 }
 
 @keyframes skeleton-pulse {
@@ -271,7 +223,6 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .panel,
   .skeletonLine,
   .skeletonCard {
     animation: none;
@@ -283,10 +234,10 @@ p {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 12px;
-  min-height: 62px;
-  padding: 7px;
+  min-height: 58px;
+  padding: 8px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 6px;
   background: white;
 }
 
@@ -309,7 +260,7 @@ p {
 .delete {
   padding: 0 14px;
   color: var(--danger);
-  background: #fff0ed;
+  background: #f7e5e1;
 }
 
 @media (max-width: 560px) {
@@ -318,8 +269,7 @@ p {
   }
 
   .panel {
-    padding: 24px 18px;
-    border-radius: 22px 22px 22px 7px;
+    padding: 22px;
   }
 
   .composer,

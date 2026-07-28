@@ -53,7 +53,7 @@ const actionHandlers: NonNullable<ConstructNextProviderProps["actionHandlers"]> 
   },
 };
 
-export function LocalConstructProvider({ children }: { children: ReactNode }) {
+export function TodoConstructProvider({ children }: { children: ReactNode }) {
   return (
     <ConstructNextProvider
       actionHandlers={actionHandlers}
@@ -67,9 +67,9 @@ export function LocalConstructProvider({ children }: { children: ReactNode }) {
 
 function todoId(input: ConstructJsonValue, capabilityId: string): string {
   const body = asRecord(input);
-  const value = body.id ?? body.todoId;
+  const value = body.id;
   if (typeof value !== "string" || !value.trim()) {
-    throw new Error(`${capabilityId} requires id or todoId.`);
+    throw new Error(`${capabilityId} requires id.`);
   }
   return value;
 }
