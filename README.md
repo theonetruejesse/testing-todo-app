@@ -44,14 +44,15 @@ export from the SDK server adapter:
 - `POST /api/construct/runtime-artifacts/resolve`
 
 Copy `.env.example` to `.env.local` for local integration. Target credentials
-remain server-only. The plain production URL resolves the active default;
-`?construct=<releaseId>` resolves an exact immutable release. Draft previews
-never load in this host and are delivered from Construct-owned preview origins.
+remain server-only. A development target uses the native host by default and
+`?construct-version=<versionId>` for an exact draft preview. A production
+target uses its assigned release by default and
+`?construct=<releaseId>` for an exact promoted release.
 
-`src/instrumentation-client.ts` calls `captureConstructReleaseSelection` before
+`src/instrumentation-client.ts` calls `captureConstructRuntimeSelection` before
 React mounts. This captures the initial URL selector once, so later client-side
-navigation cannot silently swap the release rendered by an already-mounted
-surface. The host does not parse or resolve selectors itself.
+navigation cannot silently swap the runtime rendered by an already-mounted
+surface. The host does not resolve selectors itself.
 
 ## Construct package boundary
 

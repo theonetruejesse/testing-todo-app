@@ -1,5 +1,5 @@
-import { captureConstructReleaseSelection } from "@construct/sdk/next/client";
+import { captureConstructRuntimeSelection } from "@construct/sdk/next/client";
 
-// Published release IDs are public, shareable selectors. Capture the initial
-// selection once so client navigation cannot silently change a mounted surface.
-captureConstructReleaseSelection({ document, location });
+// Runtime selectors are captured once so client navigation cannot silently
+// change the version rendered by an already-mounted surface.
+captureConstructRuntimeSelection({ document, location });

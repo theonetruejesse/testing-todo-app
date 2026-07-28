@@ -13,8 +13,8 @@ importers:
   .:
     dependencies:
       '@construct/sdk':
-        specifier: file:./vendor/construct-packages/construct-sdk-9aec217b1e40ab48.tgz
-        version: file:vendor/construct-packages/construct-sdk-9aec217b1e40ab48.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: file:./vendor/construct-packages/construct-sdk-587d5c9e4f8fcaa2.tgz
+        version: file:vendor/construct-packages/construct-sdk-587d5c9e4f8fcaa2.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.2.4
         version: 16.2.4(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -126,8 +126,8 @@ packages:
     peerDependencies:
       react: '>=19'
 
-  '@construct/sdk@file:vendor/construct-packages/construct-sdk-9aec217b1e40ab48.tgz':
-    resolution: {integrity: sha512-tlA12ybjsJnMAXJ5wrV5Oa0A6ggwNBDieFJPpEPlVBsPM5lSL1hmu1dmne6SMNGWR5MLP8PWMHVf1fjzqQGh9w==, tarball: file:vendor/construct-packages/construct-sdk-9aec217b1e40ab48.tgz}
+  '@construct/sdk@file:vendor/construct-packages/construct-sdk-587d5c9e4f8fcaa2.tgz':
+    resolution: {integrity: sha512-pIf5nrWmVe2xb1VnedfqT0zBpfV1wNYtRDl4VWHpv1OwbjmFk+WCrAJTnBsUqJmKtEqXxiSH0wS/uvuLYVp5zw==, tarball: file:vendor/construct-packages/construct-sdk-587d5c9e4f8fcaa2.tgz}
     version: 0.0.0-blueprint
     peerDependencies:
       react: '>=19'
@@ -1860,7 +1860,7 @@ snapshots:
     dependencies:
       react: 19.2.4
 
-  '@construct/sdk@file:vendor/construct-packages/construct-sdk-9aec217b1e40ab48.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@construct/sdk@file:vendor/construct-packages/construct-sdk-587d5c9e4f8fcaa2.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@construct/authority-manifest': file:vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz
       '@construct/runtime': file:vendor/construct-packages/construct-runtime-75e8c47fd9e9d80e.tgz(react@19.2.4)
@@ -2634,7 +2634,7 @@ snapshots:
       eslint: 9.39.4
       eslint-import-resolver-node: 0.3.10
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4))(eslint@9.39.4)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4))(eslint@9.39.4))(eslint@9.39.4)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.4)
       eslint-plugin-react: 7.37.5(eslint@9.39.4)
       eslint-plugin-react-hooks: 7.1.1(eslint@9.39.4)
@@ -2667,7 +2667,7 @@ snapshots:
       tinyglobby: 0.2.16
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4))(eslint@9.39.4))(eslint@9.39.4)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -2682,7 +2682,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4))(eslint@9.39.4))(eslint@9.39.4):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.2(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
