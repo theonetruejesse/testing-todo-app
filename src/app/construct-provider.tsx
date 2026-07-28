@@ -13,8 +13,7 @@ const resourceHandlers: NonNullable<ConstructNextProviderProps["resourceHandlers
   "todos.list": async () => {
     const response = await fetch("/api/todos");
     if (!response.ok) throw new Error("Failed to load todos.");
-    const body = (await response.json()) as { todos: ConstructJsonValue };
-    return body.todos;
+    return (await response.json()) as ConstructJsonValue;
   },
 };
 
@@ -32,8 +31,7 @@ const actionHandlers: NonNullable<ConstructNextProviderProps["actionHandlers"]> 
       method: "POST",
     });
     if (!response.ok) throw new Error("Failed to create todo.");
-    const body = (await response.json()) as { todo: ConstructJsonValue };
-    return body.todo;
+    return (await response.json()) as ConstructJsonValue;
   },
   "todos.delete": async (input) => {
     const id = todoId(input, "todos.delete");
@@ -41,7 +39,7 @@ const actionHandlers: NonNullable<ConstructNextProviderProps["actionHandlers"]> 
       method: "DELETE",
     });
     if (!response.ok) throw new Error("Failed to delete todo.");
-    return { ok: true };
+    return null;
   },
   "todos.update": async (input) => {
     const id = todoId(input, "todos.update");
@@ -51,8 +49,7 @@ const actionHandlers: NonNullable<ConstructNextProviderProps["actionHandlers"]> 
       method: "PATCH",
     });
     if (!response.ok) throw new Error("Failed to update todo.");
-    const body = (await response.json()) as { todo: ConstructJsonValue };
-    return body.todo;
+    return (await response.json()) as ConstructJsonValue;
   },
 };
 

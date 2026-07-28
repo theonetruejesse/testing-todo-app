@@ -71,9 +71,11 @@ pnpm build
 pnpm dev --hostname 0.0.0.0 --port 3000
 ```
 
-The todo store is intentionally empty and in-memory. Restarting the development
-server clears its records; the host does not seed examples that could be
-mistaken for Construct-generated synthetic data.
+The todo store is intentionally empty and in-memory. The browser loads its
+initial state through `GET /api/todos`, so the native surface and Managed
+Variants exercise the same backend contract. Restarting the development server
+clears its records; the host does not seed examples that could be mistaken for
+Construct-generated synthetic data.
 
 ## Todo API
 
@@ -83,3 +85,8 @@ POST   /api/todos
 PATCH  /api/todos/:id
 DELETE /api/todos/:id
 ```
+
+Operation outputs and HTTP response bodies intentionally use the same raw
+shapes: list returns `Todo[]`, create/update return `Todo`, and delete returns
+an empty `204` response. This keeps generated fixtures aligned with the values
+the runtime handlers expose.

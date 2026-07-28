@@ -1,13 +1,19 @@
 import { defineRouteOperations } from "@construct/sdk/next";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server.js";
 import { z } from "zod";
-import { deleteTodo, updateTodo } from "../store";
+import { deleteTodo, updateTodo } from "../store.ts";
 
 const todoSchema = z.object({
   id: z.string().uuid().describe("Stable todo identifier"),
   title: z.string().min(1).max(120).describe("Short description of the work item"),
   completed: z.boolean().describe("Whether the work item is complete"),
   priority: z.boolean().describe("Whether the work item is marked as a priority"),
+});
+
+const updateTodoFieldsSchema = z.object({
+  title: z.string().trim().min(1).max(120).optional(),
+  completed: z.boolean().optional(),
+  priority: z.boolean().optional(),
 });
 
 type RouteContext = {
@@ -22,12 +28,7 @@ export const operations = defineRouteOperations({
     id: "todos.update",
     title: "Update todo",
     description: "Update a todo item's title, completed state, or priority.",
-    input: z.object({
-      id: z.string().uuid(),
-      title: z.string().min(1).max(120).optional(),
-      completed: z.boolean().optional(),
-      priority: z.boolean().optional(),
-    }),
+    input: updateTodoFieldsSchema.extend({ id: z.string().uuid() }),
     output: todoSchema,
     invalidates: ["todos.list"],
   },
@@ -44,21 +45,18 @@ export const operations = defineRouteOperations({
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   const { id } = await context.params;
-  const body = (await request.json().catch(() => null)) as
-    | { completed?: unknown; priority?: unknown; title?: unknown }
-    | null;
+  const input = updateTodoFieldsSchema.safeParse(await request.json().catch(() => null));
+  if (!input.success) {
+    return NextResponse.json({ error: "invalid todo input" }, { status: 400 });
+  }
 
-  const todo = updateTodo(id, {
-    completed: typeof body?.completed === "boolean" ? body.completed : undefined,
-    priority: typeof body?.priority === "boolean" ? body.priority : undefined,
-    title: typeof body?.title === "string" ? body.title : undefined,
-  });
+  const todo = updateTodo(id, input.data);
 
   if (!todo) {
     return NextResponse.json({ error: "todo not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ todo });
+  return NextResponse.json(todo);
 }
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {

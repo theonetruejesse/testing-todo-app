@@ -1,13 +1,18 @@
 import { defineRouteOperations } from "@construct/sdk/next";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server.js";
 import { z } from "zod";
-import { createTodo, listTodos } from "./store";
+import { createTodo, listTodos } from "./store.ts";
 
 const todoSchema = z.object({
   id: z.string().uuid().describe("Stable todo identifier"),
   title: z.string().min(1).max(120).describe("Short description of the work item"),
   completed: z.boolean().describe("Whether the work item is complete"),
   priority: z.boolean().describe("Whether the work item is marked as a priority"),
+});
+
+const createTodoInputSchema = z.object({
+  title: z.string().trim().min(1).max(120).describe("Title of the new work item"),
+  priority: z.boolean().optional().describe("Whether the new work item is a priority"),
 });
 
 export const operations = defineRouteOperations({
@@ -34,29 +39,23 @@ export const operations = defineRouteOperations({
       useCases: ["Capture a new work item"],
       dataSensitivity: "internal",
     },
-    input: z.object({
-      title: z.string().min(1).max(120).describe("Title of the new work item"),
-      priority: z.boolean().optional().describe("Whether the new work item is a priority"),
-    }),
+    input: createTodoInputSchema,
     output: todoSchema,
     invalidates: ["todos.list"],
   },
 });
 
 export async function GET() {
-  return NextResponse.json({ todos: listTodos() });
+  // The wire shape intentionally matches the declared operation output. This
+  // keeps generated fixtures interchangeable with responses from the real API.
+  return NextResponse.json(listTodos());
 }
 
 export async function POST(request: NextRequest) {
-  const body = (await request.json().catch(() => null)) as
-    | { priority?: unknown; title?: unknown }
-    | null;
-  const title = typeof body?.title === "string" ? body.title.trim() : "";
-  const priority = body?.priority === true;
-
-  if (!title) {
-    return NextResponse.json({ error: "title is required" }, { status: 400 });
+  const input = createTodoInputSchema.safeParse(await request.json().catch(() => null));
+  if (!input.success) {
+    return NextResponse.json({ error: "invalid todo input" }, { status: 400 });
   }
 
-  return NextResponse.json({ todo: createTodo(title, priority) }, { status: 201 });
+  return NextResponse.json(createTodo(input.data.title, input.data.priority), { status: 201 });
 }

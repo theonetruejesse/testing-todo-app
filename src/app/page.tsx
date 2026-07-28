@@ -1,5 +1,4 @@
 import { Surface } from "@construct/sdk/react";
-import { listTodos } from "./api/todos/store";
 import { TodoApp } from "./components/todo-app";
 
 export default function Home() {
@@ -13,7 +12,7 @@ export default function Home() {
         loadingFallback={<TodoSurfaceSkeleton />}
         useCases={["Plan current work", "Track completion", "Review progress"]}
       >
-        <TodoApp initialTodos={listTodos()} />
+        <TodoApp />
       </Surface>
     </main>
   );
@@ -21,13 +20,11 @@ export default function Home() {
 
 function TodoSurfaceSkeleton() {
   return (
-    <section aria-label="Loading published workspace" className="todoApp" role="status">
-      <header className="hero">
-        <div>
-          <p className="eyebrow">Construct runtime</p>
-          <h1>Loading workspace…</h1>
-          <p>Resolving the selected production release.</p>
-        </div>
+    <section aria-label="Loading published workspace" className="panel" role="status">
+      <header className="masthead">
+        <p className="eyebrow">Todo notebook</p>
+        <h1>Loading workspace…</h1>
+        <p>Resolving the selected production release.</p>
       </header>
       <div className="composer" aria-hidden="true">
         <span className="skeletonLine" />
