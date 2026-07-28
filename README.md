@@ -49,6 +49,10 @@ remain server-only. A development target uses the native host by default and
 target uses its assigned release by default and
 `?construct=<releaseId>` for an exact promoted release.
 
+`CONSTRUCT_CONTROL_PLANE_ORIGIN` is the one Construct app origin allowed to
+frame the host for setup and sandbox inspection. Keep it exact; the SDK does
+not emit wildcard frame ancestors.
+
 `src/instrumentation-client.ts` calls `captureConstructRuntimeSelection` before
 React mounts. This captures the initial URL selector once, so later client-side
 navigation cannot silently swap the runtime rendered by an already-mounted
