@@ -1,5 +1,6 @@
 import { defineRouteOperations } from "@construct/sdk/next";
-import { NextRequest, NextResponse } from "next/server.js";
+import type { NextRequest } from "next/server.js";
+import { NextResponse } from "next/server.js";
 import { z } from "zod";
 import {
   todoSchema,

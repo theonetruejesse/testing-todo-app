@@ -6,7 +6,6 @@ export default function Home() {
     <main className="shell">
       <section className="panel">
         <header className="masthead">
-          <p className="eyebrow">Next.js sandbox target</p>
           <h1>Todo Runtime Check</h1>
           <p>
             A deliberately small app with a browser UI and API routes. It is meant to be cloned,
@@ -14,13 +13,14 @@ export default function Home() {
           </p>
         </header>
 
+        {/** biome-ignore lint/nursery/useUniqueElementIds: cleanup in-progress  */}
         <Surface
           id="todos.main"
           title="Todo workspace"
           description="Helps individuals organize, prioritize, and complete their current work."
           audience="Individual contributors"
-          loadingFallback={<TodoSurfaceSkeleton />}
           useCases={["Plan current work", "Track completion", "Review progress"]}
+          loadingFallback={<TodoSurfaceSkeleton />}
         >
           <TodoApp />
         </Surface>
