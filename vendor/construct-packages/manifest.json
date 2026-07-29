@@ -6,14 +6,14 @@
       "sha256": "51ab06ee103b5732c5b36a140616850e40748a00695df38a4a71e61900f0d773"
     },
     {
-      "file": "construct-runtime-75e8c47fd9e9d80e.tgz",
+      "file": "construct-runtime-3f51ebb6757cd7e2.tgz",
       "name": "@construct/runtime",
-      "sha256": "75e8c47fd9e9d80ed53bf1dd6e590f4a8bba072575d5772060737e86cebcb20a"
+      "sha256": "3f51ebb6757cd7e22ef7942dd252a3aef693935e055eb7d3eda7d7e1c340cd1d"
     },
     {
-      "file": "construct-sdk-01fe57227fa7e9fe.tgz",
+      "file": "construct-sdk-cd3ee8ba259e5f33.tgz",
       "name": "@construct/sdk",
-      "sha256": "01fe57227fa7e9fe460e43a3d365127e19b160a9859ae09794e3d4ea2bda43be"
+      "sha256": "cd3ee8ba259e5f33e88ecec902d5010a351d3a52428a324659126df093d281ae"
     }
   ],
   "version": "0.0.0-blueprint"
