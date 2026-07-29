@@ -1,8 +1,10 @@
 import type { Todo } from "../../../lib/todo-contract.ts";
+import { todoSchema } from "../../../lib/todo-contract.ts";
+import type { NextRequest, NextResponse } from "next/server.js";
 
 // These are application-owned examples, not generated fixtures. Stable UUIDs
 // keep the host demo recognizable while satisfying the public API contract.
-const todos: Todo[] = [
+const defaultTodos: Todo[] = [
   {
     id: "00000000-0000-4000-8000-000000000001",
     title: "Clone this repo into a sandbox",
@@ -23,26 +25,30 @@ const todos: Todo[] = [
   },
 ];
 
-export function listTodos(): Todo[] {
-  return todos;
+const todoStateCookie = "construct-todo-state-v1";
+const todos = cloneTodos(defaultTodos);
+
+export function listTodos(state: Todo[] = todos): Todo[] {
+  return state;
 }
 
-export function createTodo(title: string, priority = false): Todo {
+export function createTodo(title: string, priority = false, state: Todo[] = todos): Todo {
   const todo = {
     id: crypto.randomUUID(),
     title,
     completed: false,
     priority,
   };
-  todos.unshift(todo);
+  state.unshift(todo);
   return todo;
 }
 
 export function updateTodo(
   id: string,
   updates: Partial<Pick<Todo, "completed" | "priority" | "title">>,
+  state: Todo[] = todos,
 ): Todo | null {
-  const todo = todos.find((item) => item.id === id);
+  const todo = state.find((item) => item.id === id);
   if (!todo) return null;
 
   if (typeof updates.completed === "boolean") {
@@ -60,9 +66,45 @@ export function updateTodo(
   return todo;
 }
 
-export function deleteTodo(id: string): boolean {
-  const index = todos.findIndex((todo) => todo.id === id);
+export function deleteTodo(id: string, state: Todo[] = todos): boolean {
+  const index = state.findIndex((todo) => todo.id === id);
   if (index === -1) return false;
-  todos.splice(index, 1);
+  state.splice(index, 1);
   return true;
+}
+
+/**
+ * The canary runs on serverless hosts, where module memory is not a persistence
+ * boundary. A small HTTP-only cookie makes each browser journey portable across
+ * function instances while keeping the fixture dependency-free.
+ */
+export function readTodoState(request: NextRequest): Todo[] {
+  const encoded = request.cookies.get(todoStateCookie)?.value;
+  if (!encoded) return cloneTodos(defaultTodos);
+
+  try {
+    const parsed = JSON.parse(Buffer.from(encoded, "base64url").toString("utf8"));
+    const result = todoSchema.array().safeParse(parsed);
+    return result.success ? result.data : cloneTodos(defaultTodos);
+  } catch {
+    return cloneTodos(defaultTodos);
+  }
+}
+
+export function persistTodoState(
+  request: NextRequest,
+  response: NextResponse,
+  state: Todo[],
+): void {
+  response.cookies.set(todoStateCookie, Buffer.from(JSON.stringify(state)).toString("base64url"), {
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+    sameSite: "lax",
+    secure: request.nextUrl.protocol === "https:",
+  });
+}
+
+function cloneTodos(state: Todo[]): Todo[] {
+  return state.map((todo) => ({ ...todo }));
 }

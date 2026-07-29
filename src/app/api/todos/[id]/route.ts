@@ -5,7 +5,7 @@ import {
   todoSchema,
   updateTodoFieldsSchema,
 } from "../../../../lib/todo-contract.ts";
-import { deleteTodo, updateTodo } from "../store.ts";
+import { deleteTodo, persistTodoState, readTodoState, updateTodo } from "../store.ts";
 
 type RouteContext = {
   params: Promise<{
@@ -41,22 +41,28 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: "invalid todo input" }, { status: 400 });
   }
 
-  const todo = updateTodo(id, input.data);
+  const state = readTodoState(request);
+  const todo = updateTodo(id, input.data, state);
 
   if (!todo) {
     return NextResponse.json({ error: "todo not found" }, { status: 404 });
   }
 
-  return NextResponse.json(todo);
+  const response = NextResponse.json(todo);
+  persistTodoState(request, response, state);
+  return response;
 }
 
-export async function DELETE(_request: NextRequest, context: RouteContext) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
   const { id } = await context.params;
-  const deleted = deleteTodo(id);
+  const state = readTodoState(request);
+  const deleted = deleteTodo(id, state);
 
   if (!deleted) {
     return NextResponse.json({ error: "todo not found" }, { status: 404 });
   }
 
-  return new Response(null, { status: 204 });
+  const response = new NextResponse(null, { status: 204 });
+  persistTodoState(request, response, state);
+  return response;
 }

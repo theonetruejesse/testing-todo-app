@@ -5,7 +5,7 @@ import { DELETE, PATCH } from "./[id]/route.ts";
 import { GET, POST } from "./route.ts";
 
 test("todo routes expose the exact declared CRUD wire shapes", async () => {
-  const initialResponse = await GET();
+  const initialResponse = await GET(request("/api/todos"));
   assert.equal(initialResponse.status, 200);
   const initialTodos = (await initialResponse.json()) as Array<{
     completed: boolean;
@@ -54,15 +54,16 @@ test("todo routes expose the exact declared CRUD wire shapes", async () => {
     },
   );
   assert.equal("todo" in createdTodo, false);
+  const createdCookie = responseCookie(createResponse);
 
-  const listResponse = await GET();
+  const listResponse = await GET(request("/api/todos", "GET", undefined, createdCookie));
   assert.deepEqual(await listResponse.json(), [createdTodo, ...initialTodos]);
 
   const updateResponse = await PATCH(
     jsonRequest(`/api/todos/${createdTodo.id}`, "PATCH", {
       completed: true,
       title: "Verify the fixture contract",
-    }),
+    }, createdCookie),
     routeContext(createdTodo.id),
   );
   assert.equal(updateResponse.status, 200);
@@ -71,17 +72,18 @@ test("todo routes expose the exact declared CRUD wire shapes", async () => {
     completed: true,
     title: "Verify the fixture contract",
   });
+  const updatedCookie = responseCookie(updateResponse);
 
   const deleteResponse = await DELETE(
-    new NextRequest(`http://localhost/api/todos/${createdTodo.id}`, {
-      method: "DELETE",
-    }),
+    request(`/api/todos/${createdTodo.id}`, "DELETE", undefined, updatedCookie),
     routeContext(createdTodo.id),
   );
   assert.equal(deleteResponse.status, 204);
   assert.equal(await deleteResponse.text(), "");
 
-  const finalResponse = await GET();
+  const finalResponse = await GET(
+    request("/api/todos", "GET", undefined, responseCookie(deleteResponse)),
+  );
   assert.deepEqual(await finalResponse.json(), initialTodos);
 
   const invalidCreateResponse = await POST(
@@ -90,12 +92,35 @@ test("todo routes expose the exact declared CRUD wire shapes", async () => {
   assert.equal(invalidCreateResponse.status, 400);
 });
 
-function jsonRequest(path: string, method: "PATCH" | "POST", body: object): NextRequest {
+function jsonRequest(
+  path: string,
+  method: "PATCH" | "POST",
+  body: object,
+  cookie?: string,
+): NextRequest {
+  return request(path, method, body, cookie);
+}
+
+function request(
+  path: string,
+  method: "DELETE" | "GET" | "PATCH" | "POST" = "GET",
+  body?: object,
+  cookie?: string,
+): NextRequest {
   return new NextRequest(`http://localhost${path}`, {
-    body: JSON.stringify(body),
-    headers: { "content-type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined,
+    headers: {
+      ...(body ? { "content-type": "application/json" } : {}),
+      ...(cookie ? { cookie } : {}),
+    },
     method,
   });
+}
+
+function responseCookie(response: Response): string {
+  const value = response.headers.get("set-cookie");
+  assert.ok(value);
+  return value.split(";", 1)[0] ?? "";
 }
 
 function routeContext(id: string) {

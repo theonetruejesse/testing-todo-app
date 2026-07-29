@@ -5,7 +5,7 @@ import {
   createTodoInputSchema,
   todoSchema,
 } from "../../../lib/todo-contract.ts";
-import { createTodo, listTodos } from "./store.ts";
+import { createTodo, listTodos, persistTodoState, readTodoState } from "./store.ts";
 
 export const operations = defineRouteOperations({
   GET: {
@@ -37,10 +37,10 @@ export const operations = defineRouteOperations({
   },
 });
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   // The wire shape intentionally matches the declared operation output. This
   // keeps generated fixtures interchangeable with responses from the real API.
-  return NextResponse.json(listTodos());
+  return NextResponse.json(listTodos(readTodoState(request)));
 }
 
 export async function POST(request: NextRequest) {
@@ -49,5 +49,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "invalid todo input" }, { status: 400 });
   }
 
-  return NextResponse.json(createTodo(input.data.title, input.data.priority), { status: 201 });
+  const state = readTodoState(request);
+  const response = NextResponse.json(
+    createTodo(input.data.title, input.data.priority, state),
+    { status: 201 },
+  );
+  persistTodoState(request, response, state);
+  return response;
 }
