@@ -11,9 +11,9 @@
       "sha256": "6368dea97b330df825a45be91943ab3e9b3e65b21cdb49d432ad4ec781dba255"
     },
     {
-      "file": "construct-sdk-f2aeca1e5a7e023c.tgz",
+      "file": "construct-sdk-f7f06f91a243cf50.tgz",
       "name": "@construct/sdk",
-      "sha256": "f2aeca1e5a7e023cbd0bb1b744278cc876030134269ba5d4a780aebd0ff8f81e"
+      "sha256": "f7f06f91a243cf503560a7729ef5d82b6f28a0553da706325acae271234d0d80"
     }
   ],
   "version": "0.0.0-blueprint"
