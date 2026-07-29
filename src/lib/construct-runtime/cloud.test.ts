@@ -16,16 +16,20 @@ function contentSecurityPolicy(
   return policy;
 }
 
-test("local and development APIs permit the local control plane without compiler policy", () => {
-  for (const platformApiUrl of [
-    "http://127.0.0.1:4100",
-    "http://localhost:4100/",
-    "https://api-dev.thejesselee.com",
-  ]) {
+test("loopback APIs permit the local control plane without compiler policy", () => {
+  for (const platformApiUrl of ["http://127.0.0.1:4100", "http://localhost:4100/"]) {
     const policy = contentSecurityPolicy(platformApiUrl);
     assert.match(policy, /frame-ancestors 'self' http:\/\/localhost:4200/);
     assert.doesNotMatch(policy, /unsafe-eval/);
   }
+});
+
+test("the development API permits the app-dev control plane", () => {
+  const policy = contentSecurityPolicy("https://api-dev.thejesselee.com");
+
+  assert.match(policy, /frame-ancestors 'self' https:\/\/app-dev\.thejesselee\.com/);
+  assert.doesNotMatch(policy, /http:\/\/localhost:4200/);
+  assert.doesNotMatch(policy, /unsafe-eval/);
 });
 
 test("production API permits only the production Construct control plane", () => {

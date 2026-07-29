@@ -43,10 +43,11 @@ export from the SDK server adapter:
 
 - `POST /api/construct/runtime-artifacts/resolve`
 
-Copy `.env.example` to `.env.local` for local integration. Target credentials
-remain server-only. A development target uses the native host by default and
-`?construct-version=<versionId>` for an exact draft preview. A production
-target uses its assigned release by default and
+During Construct setup, paste the Local block directly into `.env.local`. Paste
+the Production block into the Vercel Production environment and redeploy.
+Target credentials remain server-only. A development target uses the native
+host by default and `?construct-version=<versionId>` for an exact draft preview.
+A production target uses its assigned release by default and
 `?construct=<releaseId>` for an exact promoted release.
 
 Each host environment needs one `CONSTRUCT_API_KEY` issued by its matching
@@ -54,14 +55,13 @@ Construct runtime target. The key identifies the project and environment and
 must remain server-only. Construct shows it only when the target is created or
 rotated.
 
-Construct owns the stable cloud origins used by the SDK. Local dogfood can set
-`CONSTRUCT_INTERNAL_PLATFORM_API_URL=http://127.0.0.1:4100` so the development
-host resolves versions from the locally running control plane. Deployed
-customer hosts should omit that internal override.
+Construct setup supplies the control-plane URL with each one-time key. App-dev
+uses `CONSTRUCT_INTERNAL_PLATFORM_API_URL=https://api-dev.thejesselee.com` for
+both the local and Vercel hosts, so both resolve against the same project.
 
 Internal dogfood deployments also use that endpoint to select the one Construct
 control plane permitted to frame the host. Loopback and
-`https://api-dev.thejesselee.com` permit `http://localhost:4200`;
+`https://api-dev.thejesselee.com` permits `https://app-dev.thejesselee.com`;
 `https://api.thejesselee.com` permits `https://app.thejesselee.com`. Unknown
 configured origins fail closed during configuration. This keeps the production
 script policy independent: only a local Next.js development process enables

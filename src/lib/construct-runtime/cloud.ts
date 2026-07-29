@@ -1,10 +1,11 @@
 const LOCAL_CONTROL_PLANE_ORIGIN = "http://localhost:4200";
+const DEVELOPMENT_CONTROL_PLANE_ORIGIN = "https://app-dev.thejesselee.com";
 const PRODUCTION_CONTROL_PLANE_ORIGIN = "https://app.thejesselee.com";
 
 const CONTROL_PLANE_BY_API_ORIGIN = new Map([
   ["http://127.0.0.1:4100", LOCAL_CONTROL_PLANE_ORIGIN],
   ["http://localhost:4100", LOCAL_CONTROL_PLANE_ORIGIN],
-  ["https://api-dev.thejesselee.com", LOCAL_CONTROL_PLANE_ORIGIN],
+  ["https://api-dev.thejesselee.com", DEVELOPMENT_CONTROL_PLANE_ORIGIN],
   ["https://api.thejesselee.com", PRODUCTION_CONTROL_PLANE_ORIGIN],
 ]);
 
