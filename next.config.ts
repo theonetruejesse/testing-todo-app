@@ -1,7 +1,12 @@
-import { constructRuntimeHeadersFromEnv } from "@construct/sdk/next/server";
+import { constructRuntimeHeaders } from "@construct/sdk/next/server";
 import type { NextConfig } from "next";
 
-const runtimeHeaders = constructRuntimeHeadersFromEnv(process.env);
+// Construct owns the stable cloud origins; the host only opts into the
+// development script policy needed by the local Next.js compiler.
+const runtimeHeaders = constructRuntimeHeaders(
+  {},
+  { development: process.env.NODE_ENV === "development" },
+);
 
 const nextConfig: NextConfig = {
   ...(runtimeHeaders.length

@@ -49,9 +49,15 @@ remain server-only. A development target uses the native host by default and
 target uses its assigned release by default and
 `?construct=<releaseId>` for an exact promoted release.
 
-`CONSTRUCT_CONTROL_PLANE_ORIGIN` is the one Construct app origin allowed to
-frame the host for setup and sandbox inspection. Keep it exact; the SDK does
-not emit wildcard frame ancestors.
+Each host environment needs one `CONSTRUCT_API_KEY` issued by its matching
+Construct runtime target. The key identifies the project and environment and
+must remain server-only. Construct shows it only when the target is created or
+rotated.
+
+Construct owns the stable cloud origins used by the SDK. Local dogfood can set
+`CONSTRUCT_INTERNAL_PLATFORM_API_URL=http://127.0.0.1:4100` so the development
+host resolves versions from the locally running control plane. Deployed
+customer hosts should omit that internal override.
 
 `src/instrumentation-client.ts` calls `captureConstructRuntimeSelection` before
 React mounts. This captures the initial URL selector once, so later client-side
