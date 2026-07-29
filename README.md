@@ -46,7 +46,7 @@ export from the SDK server adapter:
 During Construct setup, paste the Local block directly into `.env.local`. Paste
 the Production block into the Vercel Production environment and redeploy.
 Target credentials remain server-only. A development target uses the native
-host by default and `?construct-version=<versionId>` for an exact draft preview.
+host by default and `?cv=<versionId>` for an exact draft preview.
 A production target uses its assigned release by default and
 `?construct=<releaseId>` for an exact promoted release.
 
