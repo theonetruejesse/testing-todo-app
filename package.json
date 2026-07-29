@@ -16,7 +16,7 @@
     "check": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "dependencies": {
-    "@construct/sdk": "file:./vendor/construct-packages/construct-sdk-cd3ee8ba259e5f33.tgz",
+    "@construct/sdk": "file:./vendor/construct-packages/construct-sdk-f2aeca1e5a7e023c.tgz",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -33,7 +33,7 @@
   "pnpm": {
     "overrides": {
       "@construct/authority-manifest": "file:./vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz",
-      "@construct/runtime": "file:./vendor/construct-packages/construct-runtime-3f51ebb6757cd7e2.tgz"
+      "@construct/runtime": "file:./vendor/construct-packages/construct-runtime-6368dea97b330df8.tgz"
     }
   }
 }

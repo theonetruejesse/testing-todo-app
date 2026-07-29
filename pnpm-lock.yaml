@@ -6,15 +6,15 @@ settings:
 
 overrides:
   '@construct/authority-manifest': file:./vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz
-  '@construct/runtime': file:./vendor/construct-packages/construct-runtime-3f51ebb6757cd7e2.tgz
+  '@construct/runtime': file:./vendor/construct-packages/construct-runtime-6368dea97b330df8.tgz
 
 importers:
 
   .:
     dependencies:
       '@construct/sdk':
-        specifier: file:./vendor/construct-packages/construct-sdk-cd3ee8ba259e5f33.tgz
-        version: file:vendor/construct-packages/construct-sdk-cd3ee8ba259e5f33.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: file:./vendor/construct-packages/construct-sdk-f2aeca1e5a7e023c.tgz
+        version: file:vendor/construct-packages/construct-sdk-f2aeca1e5a7e023c.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.2.4
         version: 16.2.4(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -120,14 +120,14 @@ packages:
     resolution: {integrity: sha512-4Aw6eXvxFoMBDPCPdn7lHwBr6+/+VmGRmxmTP5rDaPqCLNcyqeeXgdqI+5HJZoOAX2huUjSYF+3a3zge7YMSQQ==, tarball: file:vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz}
     version: 0.0.0-blueprint
 
-  '@construct/runtime@file:vendor/construct-packages/construct-runtime-3f51ebb6757cd7e2.tgz':
-    resolution: {integrity: sha512-99jIiiIuVsdbL/d4/5n4fKLBAp4YKN0G5Ou+QRhfQVnzLCebZi6p216mIExyxyjBUKkdn6Px0CzzHvlFE88d8g==, tarball: file:vendor/construct-packages/construct-runtime-3f51ebb6757cd7e2.tgz}
+  '@construct/runtime@file:vendor/construct-packages/construct-runtime-6368dea97b330df8.tgz':
+    resolution: {integrity: sha512-sddmKczEGV0fRxKbxgyyRZnjP5oU1RH/k2ZJTxzMO2hN5L1l16yjJjohOjTWFqiNzZMbCRcTinZivVXlrVnECA==, tarball: file:vendor/construct-packages/construct-runtime-6368dea97b330df8.tgz}
     version: 0.0.0-blueprint
     peerDependencies:
       react: '>=19'
 
-  '@construct/sdk@file:vendor/construct-packages/construct-sdk-cd3ee8ba259e5f33.tgz':
-    resolution: {integrity: sha512-ddcmShvNvEXeBF8MJBpYJtU3PuyLM08yeSr/K3nEfQJrsmo52q/HcYF7CcT1B/Cfoty2Jk0hOxezbKSWJObijg==, tarball: file:vendor/construct-packages/construct-sdk-cd3ee8ba259e5f33.tgz}
+  '@construct/sdk@file:vendor/construct-packages/construct-sdk-f2aeca1e5a7e023c.tgz':
+    resolution: {integrity: sha512-5S3RomgfDNFdO03mQfwTEuyl3xIuxC5N21ZjdNDalOmVTxrzpVyjjHzeo69nkofCJQUvc1aJ2fTzmgX8GFxA4A==, tarball: file:vendor/construct-packages/construct-sdk-f2aeca1e5a7e023c.tgz}
     version: 0.0.0-blueprint
     peerDependencies:
       react: '>=19'
@@ -1856,14 +1856,14 @@ snapshots:
 
   '@construct/authority-manifest@file:vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz': {}
 
-  '@construct/runtime@file:vendor/construct-packages/construct-runtime-3f51ebb6757cd7e2.tgz(react@19.2.4)':
+  '@construct/runtime@file:vendor/construct-packages/construct-runtime-6368dea97b330df8.tgz(react@19.2.4)':
     dependencies:
       react: 19.2.4
 
-  '@construct/sdk@file:vendor/construct-packages/construct-sdk-cd3ee8ba259e5f33.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@construct/sdk@file:vendor/construct-packages/construct-sdk-f2aeca1e5a7e023c.tgz(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@construct/authority-manifest': file:vendor/construct-packages/construct-authority-manifest-51ab06ee103b5732.tgz
-      '@construct/runtime': file:vendor/construct-packages/construct-runtime-3f51ebb6757cd7e2.tgz(react@19.2.4)
+      '@construct/runtime': file:vendor/construct-packages/construct-runtime-6368dea97b330df8.tgz(react@19.2.4)
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
