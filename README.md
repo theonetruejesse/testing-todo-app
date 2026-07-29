@@ -59,6 +59,18 @@ Construct owns the stable cloud origins used by the SDK. Local dogfood can set
 host resolves versions from the locally running control plane. Deployed
 customer hosts should omit that internal override.
 
+Internal dogfood deployments also use that endpoint to select the one Construct
+control plane permitted to frame the host. Loopback and
+`https://api-dev.thejesselee.com` permit `http://localhost:4200`;
+`https://api.thejesselee.com` permits `https://app.thejesselee.com`. Unknown
+configured origins fail closed during configuration. This keeps the production
+script policy independent: only a local Next.js development process enables
+`unsafe-eval`.
+
+Opening a deployment directly proves its top-level route, but does not prove
+that Construct can render it in the published Home card. The host CSP must
+permit the active control-plane origin for that iframe qualification.
+
 `src/instrumentation-client.ts` calls `captureConstructRuntimeSelection` before
 React mounts. This captures the initial URL selector once, so later client-side
 navigation cannot silently swap the runtime rendered by an already-mounted

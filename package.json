@@ -12,7 +12,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --test --experimental-strip-types src/app/api/todos/*.test.ts",
+    "test": "node --test --experimental-strip-types src/app/api/todos/*.test.ts src/lib/construct-runtime/*.test.ts",
     "check": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "dependencies": {
